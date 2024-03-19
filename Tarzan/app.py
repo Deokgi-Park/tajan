@@ -6,6 +6,9 @@ from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
 
+from datetime import datetime
+
+
 import json
 import sys
 
@@ -76,29 +79,12 @@ def login():
 
 
 
-# 로그인 성공 시 게시글 리스트로 이동
-@app.route('/listAuth', methods = ['GET'])
-# @jwt_required()
-def list():
-    # current_user = get_jwt_identity() # 토큰 값 가져오기
-    # name = current_user[0]
-    # house = current_user[1]
 
-    # print(name, house)
+    
 
-    # user = db.user.find_one({'name':name, 'house':int(house)})
-    # print(user)
-    # print('good')
 
-    return render_template('boardList.html')
 
-    # else:
-    #     return jsonify({'result':'failure'})
-
-@app.route('/boardList')
-def good():
-    return render_template('boardList.html')
-
+      
 
 
 
