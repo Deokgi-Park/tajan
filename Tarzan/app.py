@@ -44,7 +44,7 @@ app.json = CustomJSONProvider(app)
 # API 시작, 로그인 페이지(메인 페이지)
 @app.route('/')
 def home():
-    return render_template('index.html')
+        return render_template('index.html')
 
 # 로그인 기능
 @app.route('/login', methods=['POST'])
@@ -62,29 +62,42 @@ def login():
 
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
-        print(create_access_token(identity=user_id,
-                                                expires_delta=False))
+        userData = [user['name'], user['house']]
+        name = user['name']
+        house = user['house']
+
         return jsonify({
             'result':'success',
-            'access_token': create_access_token(identity=user_id,
+            'access_token': create_access_token(identity=userData,
                                                 expires_delta=False) # 토큰 만료시간
         })
     else:
         return jsonify({'result':'failure'})
 
 
+
 # 로그인 성공 시 게시글 리스트로 이동
-@app.route('/list', methods=['POST'])
-@jwt_required
+@app.route('/listAuth', methods = ['GET'])
+# @jwt_required()
 def list():
-    current_user = get_jwt_identity() # 토큰 값 가져오기
-    
+    # current_user = get_jwt_identity() # 토큰 값 가져오기
+    # name = current_user[0]
+    # house = current_user[1]
 
+    # print(name, house)
 
+    # user = db.user.find_one({'name':name, 'house':int(house)})
+    # print(user)
+    # print('good')
 
-        
+    return render_template('boardList.html')
 
+    # else:
+    #     return jsonify({'result':'failure'})
 
+@app.route('/boardList')
+def good():
+    return render_template('boardList.html')
 
 
 
