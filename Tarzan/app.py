@@ -47,7 +47,7 @@ app.json = CustomJSONProvider(app)
 # API 시작, 로그인 페이지(메인 페이지)
 @app.route('/')
 def home():
-    return render_template('index.html')
+        return render_template('index.html')
 
 # 로그인 기능
 @app.route('/login', methods=['POST'])
@@ -65,16 +65,18 @@ def login():
 
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
-        print(create_access_token(identity=user_id,
-                                                expires_delta=False))
+        userData = [user['name'], user['house']]
+        name = user['name']
+        house = user['house']
+
         return jsonify({
             'result':'success',
-            'access_token': create_access_token(identity=user_id,
+            'access_token': create_access_token(identity=userData,
                                                 expires_delta=False) # 토큰 만료시간
         })
     else:
         return jsonify({'result':'failure'})
-
+    
 project_list = []
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
@@ -108,15 +110,6 @@ def add_article():
 # @app.route('/add_article_detail', methods=['POST'])
 # @jwt_required()
 # def add_article_detail():
-
-
-
-    
-    
-
-
-
-        
 
 
 
