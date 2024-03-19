@@ -1,801 +1,615 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello Tarzan!</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-        *{
-          text-align: center;
-          color : #48c78e;
-          box-sizing: border-box;
-          font-family: "Noto Sans KR", sans-serif;
+        * {
+            text-align: center;
+            color: #48c78e;
+            box-sizing: border-box;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+        a{
+            text-decoration: none;
+            color: white;
+        }
+
+        html {
+            overflow: auto;
+        }
+
+        #rightSection {
+            border-radius: 10px 10px;
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
-
+        function closeModal() {
+            $(".modal").removeClass('is-active');
+        }
+        function openModal() {
+            $(".modal").addClass('is-active');
+        }
     </script>
-  </head>
-  <body>
-    <div class="title"><p class="mt-4">기숙사 호실 문의 관리 시스템</p></div>
-    <div class="columns">
-    <section class="section column is-three-quarters has-background-info">
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-danger-dark">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-danger-dark">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
+</head>
+
+<body>
+    <div class="title columns">
+        <p class="column mt-4">기숙사 호실 문의 관리 시스템</p>
+        <div class="column is-1 mt-3">
+            <button class="button is-danger">로그아웃</button>
         </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-        <div class="tile is-ancestor">
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-            <div class="tile is-parent ">
-                <article class="tile is-child box has-background-success">
-                    <p class="has-text-white">101</p>
-                </article>
-            </div>
-        </div>
-    </section>
-    <section class="section column has-background-danger-dark">
-        
-    </section>
     </div>
-  </body>
+    <div class="columns">
+        <section class="column section is-9">
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+            <div class="columns">
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-success m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+                <article class="column has-background-danger-dark m-1 box" alt="101">
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">101</p>
+                </article>
+            </div>
+        </section>
+        <section id="rightSection" class="section column has-background-success">
+            <div class="title">
+                <p style="color:white; font-size:0.8em"><span style="color:white; font-size:1em">104</span>호실 인원 리스트</p>
+            </div>
+            <div class="box" style="position: relative; height: 30em;">
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-18 박덕기</span>
+                    </label>
+                </div>
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-17 XXX</span>
+                    </label>
+                </div>
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-17 XXX</span>
+                    </label>
+                </div>
+                <div class="is-fullwidth" style="bottom: 5px;">
+                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)">호실 문의 리스트 확인</button>
+                    <button class="is-fullwidth button is-info mb-1"  onclick="openModal(2)">체크인원 수정 처리</button>
+                    <button class="is-fullwidth button is-danger mb-1">체크인원 퇴사 처리</button>
+                </div>
+            </div>
+            <button class="is-fullwidth button is-info mb-1"  onclick="openModal(3)">미완료 문의 리스트</button>
+            <button class="is-fullwidth button is-info mb-1" type="button"> <a href="./managerUserUpload.html">기숙사 인원 리스트 추가(EXCEL)</a></button>
+        </section>
+    </div>
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content"  style="width: 80%;">
+            <article class="message is-success">
+                <div class="message-header">
+                    <p style="color: white;">호실 문의 리스트 확인</p>
+                </div>
+                <div class="container" style="height: 600px; overflow: auto;">
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>상태</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a href="#">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a href="#">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a href="#">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a href="#">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a href="#">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-danger">미완료</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr> <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr> <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr> <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr> <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr> <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                                <td><a href="#">두 번째 게시물</a></td>
+                                <td>Jane Smith</td>
+                                <td>2024-01-02</td>
+                            </tr>
+                            <!-- 추가적인 게시물들을 이곳에 추가할 수 있습니다 -->
+                        </tbody>
+                    </table>
+                </div>
+                <button class="is-fullwidth button is-danger" style="border-radius: 0;"
+                    onclick="closeModal()">취소</button>
+            </article>
+        </div>
+    </div>
+</body>
+
 </html>

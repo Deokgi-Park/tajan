@@ -1,11 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tarzan 메인페이지</title>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+
+    <!-- Font awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+    <script src="https://kit.fontawesome.com/eab63039c9.js" crossorigin="anonymous"></script>
+
+    <!-- sans font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        html {
+            overflow: auto;
+        }
+    </style>
+    <script>
+        function closeModal() {
+            $(".modal").removeClass('is-active');
+        }
+        function openModal() {
+            $(".modal").addClass('is-active');
+        }
+        $(document).ready(function () {
+
+        })
+    </script>
 </head>
+
 <body>
+    <section class="section" style="width: 80%; margin: 0 auto;">
+        <div class="title">
+            <p class="is-full has-text-success has-text-centered">사용자 페이지</p>
+            <div class="is-1 has-text-right mr-1">
+                <button class="button is-danger is-offset-one-fifth" style="text-align: center;">로그아웃</button>
+            </div>
+        </div>
+    </section>
+    <section class="section" style="width: 80%; margin: 0 auto;">
+        <div class="has-text-centered" style="width: 70%; margin: 0 auto;">
+            <button class="button is-success is-fullwidth" style="font-size: 1.5em;" onclick="openModal()">문의 글
+                작성</button>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container" style="width: 80%; margin: 0 auto;">
+            <h1 class="title">우리 호실 문의 사항</h1>
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>상태</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><span class="tag is-warning">진행중</span></td>
+                        <td><a href="#">첫 번째 게시물</a></td>
+                        <td>John Doe</td>
+                        <td>2024-01-01</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><span class="tag is-danger">미완료</span></td>
+                        <td><a href="#">두 번째 게시물</a></td>
+                        <td>Jane Smith</td>
+                        <td>2024-01-02</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
+                        <td><a href="#">두 번째 게시물</a></td>
+                        <td>Jane Smith</td>
+                        <td>2024-01-02</td>
+                    </tr>
+                    <!-- 추가적인 게시물들을 이곳에 추가할 수 있습니다 -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="section" style="width: 80%; margin: 0 auto;">
+        <div class="has-text-centered">
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous">
+                    <</a>
+                        <ul class="pagination-list">
+                            <li>
+                                <a class="pagination-link" aria-label="Goto page 1">1</a>
+                            </li>
+                            <li>
+                                <span class="pagination-ellipsis">&hellip;</span>
+                            </li>
+                            <li>
+                                <a class="pagination-link" aria-label="Goto page 45">45</a>
+                            </li>
+                            <li>
+                                <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+                            </li>
+                            <li>
+                                <a class="pagination-link" aria-label="Goto page 47">47</a>
+                            </li>
+                            <li>
+                                <span class="pagination-ellipsis">&hellip;</span>
+                            </li>
+                            <li>
+                                <a class="pagination-link" aria-label="Goto page 86">86</a>
+                            </li>
+                        </ul>
+                        <a class="pagination-next">></a>
+            </nav>
+        </div>
+    </section>
     
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <article class="message is-success">
+                <div class="message-header">
+                    <p style="color: white;">XXX 호실 문의 글 등록</p>
+                </div>
+                <div class="message-header" style="border-radius: 0;">
+                    <input class="input mb-2" type="text" placeholder="제목">
+                </div>
+                <div style="padding: 0 15px 15px; background-color: #48c774;">
+                    <textarea style="min-height: 20em;" class="textarea is-success"
+                        placeholder="본문 내용을 입력해주세요"></textarea>
+                </div>
+                <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;">등록</button>
+                <button class="is-fullwidth button is-danger" style="border-radius: 0;"
+                    onclick="closeModal()">취소</button>
+            </article>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>기숙사의 파수꾼 : : : Tarzan</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
         *{
@@ -12,7 +12,7 @@
           font-family: "Noto Sans KR", sans-serif;
         }
         html{
-            overflow: hidden;
+            overflow: auto;
         }
         .title{
           font-size: 10em;
@@ -33,7 +33,7 @@
         }
         body::before{
           content:"";
-          background:url(static/jungle.jpg) no-repeat;
+          background:url(/static/jungle.jpg) no-repeat;
           background-size:cover;
           opacity:0.5;
           position:absolute;
@@ -69,7 +69,7 @@
               Tarzan
             </p>
             <p class="subtitle has-text-success is-size-5 mt-1">
-              기숙사 생활의 문제를 사수한다! <strong class="has-text-success">Tarzan</strong>!
+              기숙사 생활의 문제를 파수한다! <strong class="has-text-success">Tarzan</strong>!
             </p>
           </div>
         </div>
@@ -104,6 +104,7 @@
               <p style="display: none;" class="help is-success">This email is invalid</p>
             </div>
           </div>
+          <div style="text-align: right;"><a style="display: inline-block;" href="./addUser.html">회원가입</a></div>
           <div class="columns is-mobile loButton">
               <button id="loginButton" class="column is-half is-offset-one-quarter button is-success is-size-4">로그인</button>
           </div>
