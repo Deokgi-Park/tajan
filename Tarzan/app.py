@@ -6,6 +6,9 @@ from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
 
+from datetime import datetime
+
+
 import json
 import sys
 
@@ -73,19 +76,44 @@ def login():
         return jsonify({'result':'failure'})
 
 
-# 로그인 성공 시 게시글 리스트로 이동
-@app.route('/list', methods=['POST'])
-@jwt_required
-def list():
-    current_user = get_jwt_identity() # 토큰 값 가져오기
+
+
+
+
+project_list = []
+@app.route('/add_article', methods=['POST'])
+@jwt_required()
+def add_article():
+
+    current_user = get_jwt_identity() 
+    name =current_user[0]
+    house = current_user[1]
+
+    title = request.form['title']
+    content = request.form['content']
+
+    year = datetime.today().year
+    month = datetime.today().month
+    date = datetime.today().day
+    time = year + "-" + month + "-" + date
+
+    db.article.insert_one({'state':"미처리",'title':title,'text':content,'date':time,'house':house,'name':name})
+    same_house = db.article.find({'house':house},{'name':name})
+
+    if title and content:
+        house_list = list(same_house)
+        for i in house_list :           # house_list 값이 비어 있을 경우?
+            if i not in project_list:
+                project_list.append({'title': title})
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
+
     
 
 
 
         
-
-
-
 
 
 
