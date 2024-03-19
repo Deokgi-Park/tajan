@@ -49,9 +49,28 @@ app.json = CustomJSONProvider(app)
 def home():
         return render_template('index.html')
 
+# API 시작, 회원가입 페이지 이동
 @app.route('/addUser')
 def addUser():
         return render_template('addUser.html')
+
+# API 시작, 회원가입 체크
+@app.route('/regiUser', methods=['POST'])
+def regiUser():
+    grade = int(request.form['grade'])
+    number = int(request.form['number'])  # 기수-학번으로 입력받는다. ex)5-25
+    name = request.form['name']
+    pw = request.form['pw']
+    print(grade,name,number,pw)
+    user = db.user.find_one({'grade':grade, 'number':number, 'name':name })
+    print(user)
+    if user:
+        update_query = {'$set': {'grade':grade, 'number':number, 'name':name }}  # 특정 필드 이름과 값을 수정하세요
+        db.user.update_one({'pw': pw}, update_query)  # 필드 이름에 맞게 수정하세요
+        return "success"
+    else:
+        return "failed"
+
 
 # 로그인 기능
 @app.route('/login', methods=['POST'])
