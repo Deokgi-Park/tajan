@@ -7,7 +7,7 @@ function createCookie(value) {
 $.ajax({
                     type: "POST",
                     url: "/login",
-                    data: {'number' : '5-25', 'pw' : "wei1os6fd34mq"},
+                    data: {'number' : '5-25', 'password' : "wei1os6fd34mq"},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             alert('좋아요 완료!')
