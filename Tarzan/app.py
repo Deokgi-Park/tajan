@@ -3,7 +3,8 @@ from pymongo import MongoClient
 
 from flask import Flask, render_template, jsonify, request
 from flask.json.provider import JSONProvider
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import *
+from werkzeug.security import *
 
 import json
 import sys
@@ -13,7 +14,7 @@ app = Flask(__name__, instance_relative_config=True)
 app.config.update(
     DEBUG = True,
     JWT_SECRET_KEY = 'X3FH9ei1LT2yhfx6nI4FpXml9Z4lXvVH0AfLIfPkIiZVjiwb'
-    )
+)
 jwt = JWTManager(app)
 
 
@@ -49,9 +50,40 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
-    user_pw = request.form['pw']
+    pw = request.form['pw']
 
+    # 입력받은 값을 기수, 학번으로 나눈다
+    user = user_id.split('-')
+    grade = int(user[0])
+    number = int(user[1])
+
+    # 일치하는 회원 찾기
+    user = db.user.find_one({'grade':grade, 'number':number, 'pw':pw})
+
+    # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
+    if user:
+        print(create_access_token(identity=user_id,
+                                                expires_delta=False))
+        return jsonify({
+            'result':'success',
+            'access_token': create_access_token(identity=user_id,
+                                                expires_delta=False) # 토큰 만료시간
+        })
+    else:
+        return jsonify({'result':'failure'})
+
+
+# 로그인 성공 시 게시글 리스트로 이동
+@app.route('/list', methods=['POST'])
+@jwt_required
+def list():
+    current_user = get_jwt_identity() # 토큰 값 가져오기
     
+
+
+
+        
+
 
 
 
