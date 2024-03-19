@@ -11,6 +11,9 @@
           color : #48c78e;
           font-family: "Noto Sans KR", sans-serif;
         }
+        html{
+            overflow: hidden;
+        }
         .title{
           font-size: 10em;
         }
@@ -50,7 +53,6 @@
         $( document ).ready(function() {
             $("#loginButton").click(function(){
                 $("#loginButton").addClass('is-loading');
-                alert('test');
             })
         })
 
@@ -72,18 +74,34 @@
           </div>
         </div>
       </section>      
-      <form class="columns is-three-fifths is-offset-one-fifth mt-3" action="/login">
+      <form method="post" lass="columns is-three-fifths is-offset-one-fifth mt-3" action="/login">
         <div class="column is-three-fifths is-offset-one-fifth">
           <div class="columns field">
-            <label class="column is-2 label is-size-4">학번</label>
-            <div class="column control">
-              <input class="input" type="email" placeholder="ex) 기수-고유번호 5-18">
+            <div class="field column">
+              <label class="label">학번</label>
+              <div class="control has-icons-left has-icons-right">
+                <input name="number" class="input is-success" type="text" placeholder="학번 입력 예시) 기수-고유번호 : 5-18" value="">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-user"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fas fa-check"></i>
+                </span>
+              </div>
+              <p style="display: none;" class="help is-success">This username is available</p>
             </div>
-          </div>
-          <div class="columns field">
-            <label class="column label is-2 is-size-4">PW</label>
-            <div class="column control">
-              <input class="input" type="password" placeholder="********">
+            <div class="field column">
+              <label class="label">비밀번호</label>
+              <div class="control has-icons-left has-icons-right">
+                <input name="password" class="input is-success" type="password" placeholder="*******" value="">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <span class="icon is-small is-right">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </span>
+              </div>
+              <p style="display: none;" class="help is-success">This email is invalid</p>
             </div>
           </div>
           <div class="columns is-mobile loButton">
