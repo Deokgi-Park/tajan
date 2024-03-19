@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+    <link rel="import" href="header.html">
+    <title>기숙사 호실 관리 시스템---TAJAN</title>
+        <style>
+
+        </style>
+
+        <script>
+            const Sort = {
+                BY_LIKES: "likes",
+                BY_VIEWERS: "viewers",
+                BY_DATE: "date",
+            };
+
+            let sortMode = Sort.BY_LIKES
+            let trashMode = false
+
+            $(document).ready(function () {
+                // 영화 보여주기
+                showMovie()
+
+                // 현재 적용되고 있는 정렬 방식의 버튼에 눌려져 보이는 효과
+                displaySorter()
+
+                // 휴지통 모드에 따라 메뉴를 다르게 바꿔주기
+                displayTrashMode(trashMode)
+            });
+
+            function showMovie() {
+                $('#movie-box').empty()
+
+                // 휴지통 여부에 따라 다른 api로 요청을 보낸다
+                if (trashMode == false) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/list",
+                        data: {'sortMode': sortMode},
+                        success: function(response) {
+                            if (response['result'] != 'success') {
+                                alert(sortMode + ' 순으로 영화 목록 받아오기 실패!')
+                                return
+                            }
+                            let movies = response['movies_list']
+                            addMovieCards(movies, false)
+                        },
+                    })
+                } else {
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/trash_list",
+                        data: {'sortMode' : sortMode},
+                        success: function(response) {
+                            if(response['result'] != 'success') {
+                                alert('휴지통 조회 실패 !')
+                                return
+                            }
+                            else {
+                                let movies = response['movies_list']
+
+                                addMovieCards(movies, true)
+                            }
+                        }
+                    })
+                }
+            }
+            // 카드 만들기
+            function addMovieCards(movies, trashMode) {
+                for (let i = 0; i < movies.length; i++) {
+                    let movie = movies[i]
+
+                    let id = movie['_id']
+                    let title = movie['title']
+                    let viewers = movie['viewers'].toLocaleString()
+                    let likes = movie['likes']
+                    let url = movie['info_url']
+                    let posterUrl = movie['poster_url']
+                    let openMonth = movie['open_month']
+                    let openYear = movie['open_year']
+                    let openDay = movie['open_day']
+
+                    let cardContentHtml = `
+                        <div id="full">
+                        <div id="movie-poster-div">
+                            <img src="${posterUrl}" class="movie-poster"/>
+                        </div>
+                        <div id="movie-meta">
+                        <a href="${url}" target="_blank" class="movie-title">${title}</a><br>
+                        <div class="movie-content">
+                        <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span><br>
+                        <span class="movie-viewers">누적관객수 ${viewers} 명</span><br>
+                        <span class="movie-date">개봉일 ${openYear}.${openMonth}.${openDay}</span>
+                        </div>
+                        </div>
+                        </div>
+                        <hr>
+                        
+                    `
+
+                    // 휴지통 여부에 따라서 하위 버튼 다르게 설정
+                    let cardFooterHtml = ''
+                    if (trashMode == false) {
+                        cardFooterHtml = `
+                        <div class="selected">
+                        <div class="select1">
+                            <a class="movie-button1" href="#" onclick="likeMovie('${id}')">
+                            위로!
+                            </a>
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </div>
+                        <div class="select2">
+                            <a class="movie-button2" href="#" onclick="trashMovie('${id}')">
+                            휴지통으로
+                            </a>
+                            <i class="fa-solid fa-trash-arrow-up"></i>
+                        </div>
+                        </div>
+                        `
+                    } else {
+                        cardFooterHtml = `
+                        <div class="selected">
+                            <div class="select1">
+                            <a class="movie-button3" href="#" onclick="restoreMovie('${id}')">
+                            복구하기
+                            </a>
+                            <i class="fa-regular fa-heart"></i>
+                            </div>
+                            <div class="select2">
+                            <a class="movie-button4" href="#" onclick="deleteMovie('${id}')">
+                            영구삭제
+                            </a>
+                            <i class="fa-solid fa-ban"></i>
+                            </div>
+                        </div>
+                        `
+                    }
+
+                    $('#movie-box').append(`
+                        <div class="card">
+                            ${cardContentHtml}
+                            ${cardFooterHtml}
+                        </div>
+                    `)
+                }
+            }
+
+            function likeMovie(movieId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/like",
+                    data: {'movieId' : movieId},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('좋아요 완료!')
+                            showMovie()
+                        } else {
+                            alert('좋아요 실패ㅠㅠ')
+                        }
+                    }
+                });
+            }
+
+            function trashMovie(movieId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/goTrash",
+                    data: {'movieId' : movieId},
+                    success: function(response) {
+                        if(response['result'] != 'success') {
+                            alert('휴지통 보내기 실패 !')
+                        }
+                        else {
+                            alert('휴지통으로 보냈습니다 !')
+                            showMovie()
+                        }
+                    }
+                })
+            }
+
+            function restoreMovie(movieId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/noTrash",
+                    data: {'movieId' : movieId},
+                    success: function(response) {
+                        if(response['result'] != 'success') {
+                            alert('되살리기 실패 !')
+                        }
+                        else {
+                            alert('되살리기 성공 !')
+                            showMovie()
+                        }
+                    }
+                })
+            }
+
+            function deleteMovie(movieId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/deathTrash",
+                    data: {'movieId' : movieId},
+                    success: function(response) {
+                        if(response['result'] != 'success') {
+                            alert('영구삭제 실패 !')
+                        }
+                        else {
+                            alert('영구삭제 성공 !')
+                            showMovie()
+                        }
+                    }
+                })
+            }
+
+            // 정렬 버튼 클릭하면 호출
+            function changeSorter(newMode) {
+                if (sortMode == newMode) {
+                    return
+                }
+
+                sortMode = newMode
+                displaySorter()
+                showMovie()
+            }
+
+            // 정렬 기준에 따라 해당 버튼만 활성화 시키고 다른 버튼은 비활성화 시킴
+            function displaySorter() {
+                // 버튼 모두 활성화
+                document.getElementById('sorter-likes').classList.remove('disabled')
+                document.getElementById('sorter-viewers').classList.remove('disabled')
+                document.getElementById('sorter-date').classList.remove('disabled')
+
+                // sortMode에 맞는 버튼만 비활성화
+                let bee = 'sorter-' + sortMode
+                document.getElementById(bee).classList.add('disabled')
+            }
+
+            function displayTrashMode(trashMode) {
+                if(trashMode == false) {
+                    $('#trash-button').text('휴지통 보기')
+                }
+                else {
+                    $('#trash-button').text('휴지통 나가기')
+                }
+            }
+
+            function changeTrash() {
+                if(trashMode == false) {
+                    trashMode = true
+                }
+                else {
+                    trashMode = false
+                }
+
+		showMovie()
+                displayTrashMode(trashMode)
+            }
+
+        </script>
+    </head>
+
+    <body>
+        
+    </body>
+</html>

@@ -1,9 +1,97 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-    </head>
-    <body>
-        <h1>안녕하세요?</h1>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        *{
+          text-align: center;
+          color : #48c78e;
+          font-family: "Noto Sans KR", sans-serif;
+        }
+        .title{
+          font-size: 10em;
+        }
+        section.hero.is-medium{
+          position: relative;
+        }
+        section.hero.is-medium::before{
+          content:"";
+          background: white;
+          border-radius: 10px;
+          opacity:0.9;
+          position:absolute;
+          top:0px;
+          left:0px;
+          right:0px;
+          bottom:0px;
+        }
+        body::before{
+          content:"";
+          background:url(./img/jungle.jpg) no-repeat;
+          background-size:cover;
+          opacity:0.5;
+          position:absolute;
+          top:0px;
+          left:0px;
+          right:0px;
+          bottom:0px;
+        }
+        @media screen and (max-width: 600px) {
+          .title{
+            font-size: 3em;
+          }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $( document ).ready(function() {
+            $("#loginButton").click(function(){
+                $("#loginButton").addClass('is-loading');
+                alert('test');
+            })
+        })
+
+    </script>
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">      
+      <section class="hero is-medium">
+        <!-- Hero content: will be in the middle -->
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="title has-text-success">
+              Tarzan
+            </p>
+            <p class="subtitle has-text-success is-size-5 mt-1">
+              기숙사 생활의 문제를 사수한다! <strong class="has-text-success">Tarzan</strong>!
+            </p>
+          </div>
+        </div>
+      </section>      
+      <form class="columns is-three-fifths is-offset-one-fifth mt-3" action="/login">
+        <div class="column is-three-fifths is-offset-one-fifth">
+          <div class="columns field">
+            <label class="column is-2 label is-size-4">학번</label>
+            <div class="column control">
+              <input class="input" type="email" placeholder="ex) 기수-고유번호 5-18">
+            </div>
+          </div>
+          <div class="columns field">
+            <label class="column label is-2 is-size-4">PW</label>
+            <div class="column control">
+              <input class="input" type="password" placeholder="********">
+            </div>
+          </div>
+          <div class="columns is-mobile loButton">
+              <button id="loginButton" class="column is-half is-offset-one-quarter button is-success is-size-4">로그인</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  </body>
 </html>
