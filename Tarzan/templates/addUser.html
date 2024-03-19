@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Tarzan!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        *{
+          text-align: center;
+          color : #48c78e;
+          box-sizing: border-box;
+          font-family: "Noto Sans KR", sans-serif;
+        }
+        .title{
+          font-size: 5rem;
+        }
+        input{
+          text-align:left;
+        }
+        section.hero.is-medium{
+          position: relative;
+        }
+        section.hero.is-medium::before{
+          content:"";
+          background: white;
+          border-radius: 10px;
+          opacity:0.9;
+          position:absolute;
+          top:0px;
+          left:0px;
+          right:0px;
+          bottom:0px;
+        }
+        .section::before{
+          content:"";
+          background:url(./img/jungle.jpg) no-repeat;
+          background-size:cover;
+          opacity:0.5;
+          position:absolute;
+          top:0px;
+          left:0px;
+          right:0px;
+          bottom:0px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $( document ).ready(function() {
+            $("#addin").click(function(){
+                $("#addin").addClass('is-loading');
+            })
+            $("#return").click(function(){
+                $("#return").addClass('is-loading');
+            })
+        })
+    </script>
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">      
+        <section class="hero is-medium">
+          <!-- Hero content: will be in the middle -->
+          <div class="hero-body">
+            <div class="container has-text-centered">
+              <p class="subtitle has-text-success is-size-3 mt-1">
+                <strong class="has-text-success is-size-1">Tarzan</strong>
+              </p>
+              <p class="title">
+                회원가입
+              </p>
+            </div>
+          </div>
+        </section>      
+        <form class="columns is-three-fifths is-offset-one-fifth mt-3">
+          <div class="column is-three-fifths is-offset-one-fifth">
+            <div class="columns field is-centered">
+              <label class="column is-2 label is-size-4">기수</label>
+              <div class="column is-5 control">
+                <input class="input is-success" type="text" placeholder="ex) 5기 -> 5">
+              </div>
+            </div>
+            <div class="columns field is-centered">
+              <label class="column is-2 label is-size-4">학번</label>
+              <div class="column is-5 control">
+                <input class="input is-success" type="text" placeholder="ex) 고유번호 -> 18">
+              </div>
+            </div>
+            <div class="columns field is-centered">
+              <label class="column label is-2 is-size-4">이름</label>
+              <div class="column is-5 control">
+                <input class="input is-success" type="text" placeholder="이름을 입력하세요">
+              </div>
+            </div>
+            <div class="columns field is-centered">
+              <label class="column is-2 label is-size-4">PW</label>
+              <div class="column is-5 control">
+                <input class="input is-success" type="password" placeholder="사용할 PASSWORD 입력">
+              </div>
+            </div>
+            <div class="columns field is-centered">
+              <label class="column is-2 label is-size-5">재확인</label>
+              <div class="column is-5 control">
+                <input class="input is-success" type="password" placeholder="사용할 PASSWORD 재입력">
+              </div>
+            </div>
+            <div class="columns is-mobile loButton">
+                <button id="addin" class="column is-6 is-offset-3 button is-success is-size-4">회원가입</button>
+            </div>
+            <div class="columns is-mobile mt-1">
+              <a id="return" href="./index.html" class="column is-6 is-offset-3 button is-success is-size-4">돌아가기</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </body>
+</html>
