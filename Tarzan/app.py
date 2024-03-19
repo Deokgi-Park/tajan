@@ -49,6 +49,10 @@ app.json = CustomJSONProvider(app)
 def home():
         return render_template('index.html')
 
+@app.route('/addUser')
+def addUser():
+        return render_template('addUser.html')
+
 # 로그인 기능
 @app.route('/login', methods=['POST'])
 def login():
