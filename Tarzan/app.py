@@ -75,11 +75,6 @@ def login():
     else:
         return jsonify({'result':'failure'})
 
-
-
-
-
-
 project_list = []
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
@@ -108,7 +103,15 @@ def add_article():
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
+    
 
+# @app.route('/add_article_detail', methods=['POST'])
+# @jwt_required()
+# def add_article_detail():
+
+
+
+    
     
 
 
