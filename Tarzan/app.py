@@ -65,8 +65,8 @@ def regiUser():
     user = db.user.find_one({'grade':grade, 'number':number, 'name':name })
     print(user)
     if user:
-        update_query = {'$set': {'grade':grade, 'number':number, 'name':name }}  # 특정 필드 이름과 값을 수정하세요
-        db.user.update_one({'pw': pw}, update_query)  # 필드 이름에 맞게 수정하세요
+        update_query = {'$set': {'pw':pw}}  # 특정 필드 이름과 값을 수정하세요
+        db.user.update_one({'grade':grade, 'number':number, 'name':name}, update_query)  # 필드 이름에 맞게 수정하세요
         return "success"
     else:
         return "failed"
