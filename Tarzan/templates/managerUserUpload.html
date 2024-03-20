@@ -1,34 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Excel File</title>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+    <!-- Font awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+    <script src="https://kit.fontawesome.com/eab63039c9.js" crossorigin="anonymous"></script>
+
+    <!-- sans font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            width: 100%;
+            height: 100vh;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.5),
+                    rgba(255, 255, 255, 0.5)), url(../static/jungle.jpg);
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Upload Excel File</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx, .xls">
-        <button type="submit">Upload</button>
-    </form>
-
+    <section class="section">
+        <div class="columns">
+            <!-- 왼쪽 섹션: 파일 업로드 폼 -->
+            <div class="column has-text-centered">
+                <section class="section">
+                    <div class="container">
+                        <h1 class="title has-text-success has-text-weight-bold has-background-white p-3" style="border-radius: 10px; border: 1px solid green;">Upload Excel File</h1>
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <div class="file has-name is-boxed is-centered">
+                                <label class="file-label">
+                                    <input class="file-input" type="file" name="file" accept=".xlsx, .xls">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">
+                                            Choose a file…
+                                        </span>
+                                    </span>
+                                    <span class="file-name" style="background-color: white; margin-bottom: 10px; ">No file chosen</span>
+                                </label>
+                            </div>
+                            <button class="button is-primary" type="submit">등록</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <!-- 오른쪽 섹션: 처리 결과 표시 -->
+            <div class="column has-text-centered">
+                <section class="section">
+                    <div class="container">
+                        <h1 class="title has-text-success has-text-weight-bold has-background-white p-3" style="border-radius: 10px; border: 1px solid green;">Processing Result</h1>
+                        <div id="processingResult" style="height: 50vh; background-color: aliceblue; border-radius: 10px; border: 1px solid green;">
+                            <!-- 여기에 처리 결과를 동적으로 추가할 수 있습니다. -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+    <!-- Font Awesome 아이콘 추가 -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
-        const form = document.getElementById('uploadForm');
+        // 파일 업로드 폼 submit 이벤트 핸들러
+        document.getElementById('uploadForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // 기본 동작 방지
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(form);
+            // FormData 생성
+            const formData = new FormData(this);
 
             try {
+                // 서버로 파일 업로드 요청
                 const response = await fetch('/upload_excel', {
                     method: 'POST',
                     body: formData
                 });
 
                 if (response.ok) {
+                    // 성공 시 처리 결과를 표시
                     const result = await response.json();
-                    alert(result.message);
+                    document.getElementById('processingResult').innerHTML = `<p>${result.message}</p>`;
                 } else {
                     throw new Error('Failed to upload Excel file');
                 }
@@ -37,6 +99,15 @@
                 alert('An error occurred while uploading the Excel file');
             }
         });
+
+        // 파일 선택 시 파일 이름 표시
+        const fileInput = document.querySelector('.file-input');
+        const fileLabel = document.querySelector('.file-name');
+        fileInput.addEventListener('change', function () {
+            const fileName = this.files[0].name;
+            fileLabel.textContent = fileName;
+        });
     </script>
 </body>
+
 </html>
