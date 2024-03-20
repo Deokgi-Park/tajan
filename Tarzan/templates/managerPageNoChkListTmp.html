@@ -1,6 +1,6 @@
 {% if project_list %}
 {% for post in project_list %}
-<tr>
+<tr class="has-text-centered">
     <td>{{ post.house }}</td>
     <td><span class="tag {% if post.state == '1' %}is-warning
         {% elif post.state == '0' %}is-danger
@@ -20,6 +20,6 @@
 {% endfor %}
 {% else %}
 <tr>
-    <td colspan="5">문의 게시글이 없습니다.</td>
+    <td colspan="5" class="has-text-centered">문의 게시글이 없습니다.</td>
 </tr>
 {% endif %}
