@@ -114,7 +114,6 @@ def logout():
 def loginManager():
         return render_template('managerPage.html', name='test')
 
-
 @app.route('/loginUser')
 def loginUser():
         return render_template('mainPage.html')
