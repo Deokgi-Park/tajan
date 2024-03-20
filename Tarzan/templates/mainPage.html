@@ -114,6 +114,8 @@
                 success: function (response) {
                     $("#lllist").empty();
                     $("#lllist").prepend(response);
+                    $('#ttitle').val('')
+                    $('#ttext').val('')
                     $('.modal').removeClass('is-active')
                 }
                 , error: function (xhr, status, error) {
@@ -157,10 +159,7 @@
 
         // 댓글 작성 기능
         function makeComment(articleId) {
-
-            // 작성할 댓글 내용 긁어오기
             commentText = $('#commentArea').val()
-
             $.ajax({
                 url: "/makeComment",
                 type: "POST",

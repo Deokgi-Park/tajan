@@ -217,32 +217,24 @@ def joinArticle():
 @app.route('/modifyArticle', methods = ['POST'])
 @jwt_required()
 def modifyArticle():
-    current_user = get_jwt_identity()
+    articleId = ObjectId(request.form['articleId']) # _id값 수신
+    changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
+    changeText = request.form['text']
+    changeState = request.form['state']
+    
+    if changeState == '미처리':
+        changeState = '0'
+    elif changeState == '진행중':
+        changeState = '1'
+    else:
+        changeState = '2'
 
-    name = current_user[0]
-    house = current_user[1]
+    result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
 
-    # 토큰에 해당하는 유저가 존재할 경우
-    user = db.user.find_one({'name':name, 'house':house})
-    if user:
-        articleId = ObjectId(request.form['articleId']) # _id값 수신
-        changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
-        changeText = request.form['text']
-        changeState = request.form['state']
-        
-        if changeState == '미처리':
-            changeState = '0'
-        elif changeState == '진행중':
-            changeState = '1'
-        else:
-            changeState = '2'
-
-        result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
-
-        if result.modified_count == 1 :
-            return jsonify({'result' : 'success'})
-        else :
-            return jsonify({'result' : 'failure'})
+    if result.modified_count == 1 :
+        return jsonify({'result' : 'success'})
+    else :
+        return jsonify({'result' : 'failure'})
 
 
 # 댓글 작성 기능

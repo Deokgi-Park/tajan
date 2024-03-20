@@ -10,7 +10,7 @@
                         {% if article.state == '0' %}
                          selected
                         {% endif %}
-                        >미확인</option>
+                        >미처리</option>
                         <option
                         {% if article.state == '1' %}
                          selected
@@ -51,7 +51,7 @@
                                     <p>
                                         <strong>{{ c.name }}</strong>
                                         <br>
-                                        댓글 내용 {{ c.text }}
+                                        {{ c.text }}
                                         <br>
                                         <small>작성일: {{ c.date }}</small>
                                     </p>
@@ -66,8 +66,8 @@
         </div>
         <div>
             <textarea style="min-height: 4em; border: 0; margin-top: 1em;" class="textarea is-success"
-                placeholder="댓글 내용을 입력해주세요"></textarea>
-            <button class="is-fullwidth button is-info mb-1">댓글 등록</button>
+                placeholder="댓글 내용을 입력해주세요" id="commentArea"></textarea>
+            <button class="is-fullwidth button is-info mb-1" onclick="makeComment('{{article._id}}')">댓글 등록</button>
         </div>
     </section>
 </div>
