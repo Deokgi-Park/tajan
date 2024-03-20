@@ -32,10 +32,6 @@
             color: white;
         }
 
-        body {
-            padding: 1%;
-        }
-
         html {
             overflow: auto;
         }
@@ -50,28 +46,12 @@
     </style>
     <script>
         $(document).ready(function () {
+            $(".icon").css("color", "#f14668");
+            document.getElementById("colorSelect").addEventListener("change", function () {
+                changeColor(this);
+            });
             batchHouse();
-            setInterval(() => batchHouse(), 10000);
-
-            $(document).on("click", ".moniter", function () {
-                let house = $(this).attr('alt');
-                $.ajax({
-                    type: 'POST',
-                    url: '/joinHouse',
-                    headers: {
-                        "Authorization": "Bearer " + getCookie("access_token")
-                    },
-                    data: { house: house },
-                    success: function (response) {
-                        $("#rightSection").empty();
-                        $("#rightSection").html(response);
-                    }
-                });
-            });
-            $(document).on('dblclick', '.moniter', function () {
-                let room = $(this).attr('alt')
-                dbboardList(room);
-            });
+            setInterval(() => batchHouse(), 30000);
         });
         function getCookie(name) {
             var cookieValue = null;
@@ -144,148 +124,109 @@
                     break;
             }
         }
-        function openModal(type, articleId) {
+        function openModal(type) {
             switch (type) {
-                case 1: // 호실별 문의 리스트 / 미완료 문의 리스트
-                    boardList();
+                case 1: // 호실별 문의 리스트
+                    $(".modal.1").addClass('is-active');
+
                     break;
                 case 2:
-                    let setUserInfo = $('input[type="radio"]:checked').val();
-                    if (setUserInfo == '' || setUserInfo == undefined) {
-                        alert('기숙생을 선택해주세요.')
-                        return;
-                    }
-                    setUserInfo = setUserInfo.split('-');
-                    setUserInfo.forEach((value, index) => {
-                        $('.modal.2 input').eq(index).val(value);
-                    });
                     $(".modal.2").addClass('is-active');
                     break;
                 case 3:
-                    $.ajax({
-                        url: "/mngJoinArticle", // 요청을 보낼 엔드포인트 URL
-                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                        headers: {
-                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
-                        },
-                        data: { 'articleId': articleId },
-                        success: function (response) {
-                            $(".modal.3").empty();
-                            $(".modal.3").prepend(response);
-                            $(".modal.3").addClass('is-active');
-                        },
-                        error: function (error) {
-                            alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                            window.location.href = '/';
-                        }
-                    })
-                    break;
-                case 4:
-                    $.ajax({
-                        url: "/mngNoChkJoinArticle", // 요청을 보낼 엔드포인트 URL
-                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                        headers: {
-                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
-                        },
-                        data: { 'articleId': articleId },
-                        success: function (response) {
-                            $(".modal.3").empty();
-                            $(".modal.3").prepend(response);
-                            $(".modal.3").addClass('is-active');
-                        },
-                        error: function (error) {
-                            alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                            window.location.href = '/';
-                        }
-                    })
+                    $(".modal.3").addClass('is-active');
                     break;
                 default: // 모든 호실 미처리 문의 리스트
-                    noCheckBoardList();
+                    $(".modal.1").addClass('is-active');
+                    $.ajax({
+                        url: "/noList",
+                        type: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + getCookie("access_token")
+                        },
+                        success: function (response) {
+                            if(response['result'] == 'success') {
+                                house = 
+                            }
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                            console.error("요청 실패 또는 오류 발생:", status, error);
+                        }
+                    });
                     break;
             }
         }
-        // 댓글 작성 기능
-        function makeComment(articleId) {
-            commentText = $('#commentArea').val()
+
+
+        function changeColor(data) {
+            let selectedColor = data.value; // 선택한 색상
+            // 아이콘의 색상 변경
+            switch (selectedColor) {
+                case "미처리":
+                    $(".icon").css("color", "#f14668");
+                    break;
+                case "진행중":
+                    $(".icon").css("color", "#ffdd57");
+                    break;
+                case "완료":
+                    $(".icon").css("color", "#48c774");
+                    break;
+                default:
+                    $(".icon").css("color", "#f14668");
+            }
+        }
+        function select_house(house_id) {
+            let house = $('#house').val()       //id 값에 따라 #house값 변경
             $.ajax({
-                url: "/makeComment",
-                type: "POST",
-                headers: {
-                    "Authorization": "Bearer " + getCookie("access_token")
+                type: 'POST',
+                url: '/joinHouse',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: { 'articleId': articleId, 'text': commentText },
+                data: { house: house_id },
+                success: function (response) {
+                    if (response['status'] == 'success') {
+                        for (let i = 0; i < response.length; i++) {
+                            grade = response[i]['grade']
+                            number = response[i]['number']
+                            name = response[i]['name']
+                            inputHtml = '<h3>' + grade + ' ' + number + ' ' + nmae + '</h3>';
+                            $('#house').append(inputHtml);          // 위와 동일
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
+        // 관리자 페이지 인원 리스트
+        function select_house(house_id) {
+            let house = $('#house').val()       //id 값에 따라 #house값 변경
+            $.ajax({
+                type: 'POST',
+                url: '/joinHouse',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                },
+                data: { house: house_id },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert("댓글 등록 완료!")
-                        openModal(3, articleId)
+                        for (let i = 0; i < response.length; i++) {
+                            grade = response[i]['grade']
+                            number = response[i]['number']
+                            name = response[i]['name']
+                            inputHtml = '<h3>' + grade + ' ' + number + ' ' + name + '</h3>';
+                            $('#house').append(inputHtml);          // 위와 동일
+                        }
+                    } else {
+                        alert(response.message);
                     }
-                    else {
-                        alert("댓글 등록 실패!")
-                    }
-                },
-                error: function (err) {
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
-                }
-            })
-        }
-        function boardList() {
-            $.ajax({
-                type: 'POST',
-                url: '/mng_article',
-                headers: { "Authorization": "Bearer " + getCookie("access_token") },
-                data: { house: $("#houseNumber").text() },
-                success: function (response) {
-                    $("#boardList").empty();
-                    $("#boardList").prepend(response);
-                    $(".modal.1").addClass('is-active');
-                    $(".modal.3").removeClass('is-active');
-                }
-                , error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
                 }
             });
         }
-        function dbboardList(room) {
-            $.ajax({
-                type: 'POST',
-                url: '/mng_article',
-                headers: { "Authorization": "Bearer " + getCookie("access_token") },
-                data: { house: room },
-                success: function (response) {
-                    $("#boardList").empty();
-                    $("#boardList").prepend(response);
-                    $(".modal.1").addClass('is-active');
-                }
-                , error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
-                }
-            });
-        }
-        function noCheckBoardList() {
-            $.ajax({
-                type: 'POST',
-                url: '/no_check_article',
-                headers: { "Authorization": "Bearer " + getCookie("access_token") },
-                success: function (response) {
-                    $("#boardList").empty();
-                    $("#boardList").prepend(response);
-                    $(".modal.1").addClass('is-active');
-                    $(".modal.3").removeClass('is-active');
-                }
-                , error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
-                }
-            });
-        }
-
-
         // 관리자 페이지 "호실 문의 리스트 확인"
         function help_list(house_id) {
             let house = $('#user_list').val()       //id 값에 따라 #user_list값 변경
@@ -298,30 +239,14 @@
                 data: { house: house_id },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        $('#checkList').empty();
                         for (let i = 0; i < response.length; i++) {
                             house = response[i]['house']
                             state = response[i]['state']
                             title = response[i]['title']
                             date = response[i]['date']
                             name = response[i]['name']
-                            if (state == 0) {
-                                state_str = '미처리'
-                            }
-                            else if (state == 1) {
-                                state_str = '처리중'
-                            }
-                            else {
-                                state_str = "처리 완료"
-                            }
-                            inputHtml = `<tr>
-                                <td>${house}</td>
-                                <td><span class="tag is-warning">${state_str}</span></td>
-                                <td><a onclick="openModal(3)">${title}</a></td>
-                                <td>${date}</td>
-                                <td>${name}</td>
-                            </tr>`;
-                            $('#checkList').append(inputHtml);          // 위와 동일
+                            inputHtml = '<h3>' + house + ' ' + state + ' ' + title + ' ' + name + ' ' + date + '</h3>';
+                            $('#user_list').append(inputHtml);          // 위와 동일
                         }
                     } else {
                         alert(response.message);
@@ -330,156 +255,54 @@
             });
         }
 
-        // 수정 기능
-        function modifyArticle(articleId) {
-            title = $('#titlee').val()
-            text = $('#textt').val()
-            state = $('#colorSelect').val();
-
+        // 관리자 페이지 "체크 인원 수정 처리"
+        function modifyInformation(house_id, name_id, grade_id, number_id, new_name_id) {
+            let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
-                url: "/modifyArticle", // 요청을 보낼 엔드포인트 URL
-                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                headers: {
-                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                type: 'POST',
+                url: '/modifyUser',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: { 'articleId': articleId, 'title': title, 'text': text, 'state': state },
+                data: {
+                    house: house_id,
+                    name: name_id,
+                    grade: grade_id,
+                    number: number_id,
+                    new_name: new_name_id
+                },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert("수정 완료!")
-                        boardList()
+                        alert('수정이 완료되었습니다.');
+                        window.location.reload();
+                    } else {
+                        alert(response.message);
                     }
-                    else {
-                        alert("수정 실패!")
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
                 }
             });
         }
-        function noCheckmodifyArticle(articleId) {
-            title = $('#titlee').val()
-            text = $('#textt').val()
-            state = $('#colorSelect').val();
-
+        // 관리자 페이지 "체크 인원 퇴사 처리"
+        function deleteInformation(house_id, name_id) {
+            let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
-                url: "/noCheckmodifyArticle", // 요청을 보낼 엔드포인트 URL
-                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                headers: {
-                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                type: 'POST',
+                url: '/deleteUser',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: { 'articleId': articleId, 'title': title, 'text': text, 'state': state },
+                data: {
+                    house: house_id,
+                    name: name_id,
+                },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert("수정 완료!")
-                        noCheckBoardList()
+                        alert('퇴사 처리가 완료되었습니다.');
+                        window.location.reload();
+                    } else {
+                        alert(response.message);
                     }
-                    else {
-                        alert("수정 실패!")
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href = '/';
                 }
             });
-        }
-        function updateUser() {
-            let userInfo = $('input[type="radio"]:checked').val();
-            if (userInfo == '') {
-                return;
-            }
-            else {
-                let newGrade = $('#newGrade').val()
-                let newNumber = $('#newNumber').val()
-                let newName = $('#newName').val()
-                $.ajax({
-                    url: "/modifyUser", // 요청을 보낼 엔드포인트 URL
-                    type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                    headers: {
-                        "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
-                    },
-                    data: {
-                        userInfo: userInfo,
-                        newGrade: newGrade,
-                        newNumber: newNumber,
-                        newName: newName
-                    },
-                    success: function (response) {
-                        if (response['result'] == 'success') {
-                            alert("처리 완료!")
-                            let house = $('#houseNumber').text();
-                            $.ajax({
-                                type: 'POST',
-                                url: '/joinHouse',
-                                headers: {
-                                    "Authorization": "Bearer " + getCookie("access_token")
-                                },
-                                data: { house: house },
-                                success: function (response) {
-                                    $("#rightSection").empty();
-                                    $("#rightSection").html(response);
-                                }
-                            });
-                        }
-                        else {
-                            alert("처리 실패!")
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // 요청이 실패한 경우 또는 오류가 발생한 경우
-                        alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                        window.location.href = '/';
-                    }
-                });
-            }
-        }
-        function deleteUser() {
-            let userInfo = $('input[type="radio"]:checked').val();
-            if (userInfo == '') {
-                return;
-            }
-            else {
-                if (confirm("정말로" + userInfo + "님을 퇴사처리하겠습니까?")) {
-                    $.ajax({
-                        url: "/deleteUser", // 요청을 보낼 엔드포인트 URL
-                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                        headers: {
-                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
-                        },
-                        data: { 'userInfo': userInfo },
-                        success: function (response) {
-                            if (response['result'] == 'success') {
-                                alert("처리 완료!")
-                                let house = $('#houseNumber').text();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/joinHouse',
-                                    headers: {
-                                        "Authorization": "Bearer " + getCookie("access_token")
-                                    },
-                                    data: { house: house },
-                                    success: function (response) {
-                                        $("#rightSection").empty();
-                                        $("#rightSection").html(response);
-                                    }
-                                });
-                            }
-                            else {
-                                alert("처리 실패!")
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            // 요청이 실패한 경우 또는 오류가 발생한 경우
-                            alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                            window.location.href = '/';
-                        }
-                    });
-                }
-            }
         }
     </script>
 </head>
@@ -499,17 +322,35 @@
         <section class="column section is-9" id="moniter"></section>
         <section id="rightSection" class="section column has-background-success">
             <div class="title">
-                <p style="color:white; font-size:0.8em"><span style="color:white; font-size:1em"></span>호실 인원 리스트</p>
+                <p style="color:white; font-size:0.8em"><span style="color:white; font-size:1em">104</span>호실 인원 리스트</p>
             </div>
             <div class="box" style="position: relative; height: 30em;">
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-18 박덕기</span>
+                    </label>
+                </div>
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-17 XXX</span>
+                    </label>
+                </div>
+                <div class="box has-text-left">
+                    <label class="radio">
+                        <input type="radio" name="select">
+                        <span>5-17 XXX</span>
+                    </label>
+                </div>
                 <div class="is-fullwidth" style="bottom: 5px;">
-                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)">호실 문의 리스트
+                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)" data-option="1">호실 문의 리스트
                         확인</button>
                     <button class="is-fullwidth button is-info mb-1" onclick="openModal(2)">체크인원 수정 처리</button>
                     <button class="is-fullwidth button is-danger mb-1">체크인원 퇴사 처리</button>
                 </div>
             </div>
-            <button class="is-fullwidth button is-info mb-1" onclick="openModal()">미완료 문의 리스트</button>
+            <button class="is-fullwidth button is-info mb-1" onclick="openModal()" data-option="2">미완료 문의 리스트</button>
             <button class="is-fullwidth button is-info mb-1" type="button"> <a href="./managerUserUpload.html">기숙사 인원
                     리스트 추가(EXCEL)</a></button>
         </section>
@@ -532,7 +373,21 @@
                                 <th>작성일</th>
                             </tr>
                         </thead>
-                        <tbody id="boardList">
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a onclick="openModal(3)">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="tag is-warning">진행중</span></td>
+                                <td><a onclick="openModal(3)">첫 번째 게시물첫 번째 게시물첫 번째 게시물첫 번째 게시물</a></td>
+                                <td>John Doe</td>
+                                <td>2024-01-01</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -552,31 +407,113 @@
                     <div class="field">
                         <label class="label">기수</label>
                         <div class="control">
-                            <input id="newGrade" class="input" type="text" placeholder="Text input">
+                            <input class="input" type="text" placeholder="Text input">
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">학번</label>
                         <div class="control">
-                            <input id="newNumber" class="input" type="text" placeholder="Text input">
+                            <input class="input" type="text" placeholder="Text input">
                         </div>
                     </div>
                     <div class="field">
                         <label class="label">이름</label>
                         <div class="control">
-                            <input id="newName" class="input" type="text" placeholder="Text input">
+                            <input class="input" type="text" placeholder="Text input">
                         </div>
                     </div>
                 </form>
-                <button class="is-fullwidth button is-info" style="border-radius: 0;" onclick="updateUser()">등록</button>
                 <button class="is-fullwidth button is-danger" style="border-radius: 0;"
                     onclick="closeModal(2)">취소</button>
             </article>
         </div>
     </div>
     <div class="modal 3">
-    </div>
+        <div class="modal-background"></div>
+        <div class="modal-content columns" style="width: 80%;">
+            <article class="message is-success column" style="padding:0">
+                <div class="message-header">
+                    <p style="color: white;">문의 글 확인 및 수정</p>
+                    <div class="control has-icons-left">
+                        <div class="select">
+                            <select id="colorSelect">
+                                <option>미처리</option>
+                                <option>진행중</option>
+                                <option>완료</option>
+                            </select>
+                        </div>
+                        <span class="icon is-medium is-left">
+                            <i class="fa-solid fa-tag"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="message-header" style="border-radius: 0;">
+                    <input class="input mb-2" type="text" placeholder="제목">
+                </div>
+                <div style="padding: 0 15px 15px; background-color: #48c774;">
+                    <textarea style="min-height: 20em;" class="textarea is-success"
+                        placeholder="본문 내용을 입력해주세요"></textarea>
+                </div>
+                <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;">수정</button>
+                <button class="is-fullwidth button is-danger" style="border-radius: 0;"
+                    onclick="closeModal(3)">취소</button>
+            </article>
+            <section class="section column">
+                <div class="container">
+                    <div class="box" style="overflow: auto; max-height: 300px;">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>사용자 이름</strong>
+                                        <br>
+                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
+                                        iaculis mauris.
+                                        <br>
+                                        <small>작성일: 2024-03-19</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>사용자 이름</strong>
+                                        <br>
+                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
+                                        iaculis mauris.
+                                        <br>
+                                        <small>작성일: 2024-03-19</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>사용자 이름</strong>
+                                        <br>
+                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
+                                        iaculis mauris.
+                                        <br>
+                                        <small>작성일: 2024-03-19</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div>
+                    <textarea style="min-height: 4em; border: 0; margin-top: 1em;" class="textarea is-success"
+                        placeholder="댓글 내용을 입력해주세요"></textarea>
+                    <button class="is-fullwidth button is-info mb-1"">댓글 등록</button>
+                </div>
+            </section>
+        </div>
 
+    </div>
 </body>
 
 </html>
