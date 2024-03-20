@@ -163,7 +163,7 @@ def list():
     if user:
         grade = user.get('grade')  # grade 필드 값 가져오기
         number = user.get('number')  # number 필드 값 가져오기
-        if grade == 0 and number  == 0:
+        if grade == '0' and number  == '0':
             return jsonify({'result':'admin'})
         else:
             return jsonify({'result':'success'})
