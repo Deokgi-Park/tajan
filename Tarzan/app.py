@@ -72,8 +72,7 @@ def regiUser():
     else:
         return "failed"
 
-
-# 로그인 기능
+# 로그인 기능(토큰 발급)
 @app.route('/login', methods=['POST'])
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
@@ -103,9 +102,16 @@ def login():
         })
     else:
         return jsonify({'result':'failure'})
-    
 
-project_list = {}
+@app.route('/loginManager')
+def loginManager():
+        return render_template('managerPage.html')
+
+@app.route('/loginUser')
+def loginUser():
+        return render_template('mainPage.html')
+
+
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
@@ -137,7 +143,6 @@ def add_article():
     else:
         return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
-
 # 로그인 성공 시 게시글 리스트로 이동
 @app.route('/listAuth', methods = ['POST'])
 @jwt_required()
@@ -149,15 +154,16 @@ def list():
 
     user = db.user.find_one({'name':name, 'house':house})
 
-    if user:    
-        return jsonify({'result':'success'})
+    if user:
+        grade = user.get('grade')  # grade 필드 값 가져오기
+        number = user.get('number')  # number 필드 값 가져오기
+        if grade == 0 and number  == 0:
+            return jsonify({'result':'admin'})
+        else:
+            return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
 
-@app.route('/boardList')
-def good():
-    return render_template('boardList.html', userName='양선규')
-    
 # @app.route('/test')
 # def test(userName):
 #     return render_template('jinjaTest.html')
