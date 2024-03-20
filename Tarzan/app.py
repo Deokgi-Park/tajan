@@ -1,15 +1,13 @@
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request, make_response, session
+from flask import Flask, render_template, jsonify, request
 from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
 
 from datetime import datetime
 from jinja2 import Template
-
-from datetime import timedelta
 
 
 import json
@@ -74,19 +72,23 @@ def regiUser():
     else:
         return "failed"
 
-# 로그인 기능(토큰 발급)
+
+# 로그인 기능
 @app.route('/login', methods=['POST'])
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     pw = request.form['password']
+    print(user_id, pw)
 
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
-    grade = user[0]
-    number = user[1]
+    grade = int(user[0])
+    number = int(user[1])
+    print(grade,number)
 
     # 일치하는 회원 찾기
     user = db.user.find_one({'grade':grade, 'number':number, 'pw':pw})
+    print(user)
 
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
@@ -153,12 +155,92 @@ def add_article():
 
     # if title and content:
     for i in house_list :           # house_list 값이 비어 있을 경우?
-        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house']})
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id']})
 
     return jsonify({'status': 'success', 'project_list':project_list})
     # else:
         # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
+
+# 문의글 상세 페이지(제목, 내용, 처리상태 조회,수정 / 댓글 작성)
+# 문의글 상세 페이지 조회(글, 댓글리스트)
+@app.route('/joinArticle', methods = ['POST'])
+@jwt_required()
+def joinArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우 로직 실행
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        articleId = ObjectId(request.form['articleId']) # _id값 수신
+
+        article = db.article.find_one({'_id':articleId}) # 글 찾기
+        comment = db.article.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+
+        return jsonify({'result':'success', 'article':article, 'comment':comment})
+    else:
+        return jsonify({'result':'failure'})
+    
+
+# 문의글 수정 기능(제목, 내용, 처리상태)
+@app.route('/modifyArticle', methods = ['POST'])
+@jwt_required()
+def modifyArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        articleId = ObjectId(request.form['articleId']) # _id값 수신
+        changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
+        changeText = request.form['text']
+        changeState = request.form['state']
+
+        result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
+
+        if result.modified_count == 1 :
+            return jsonify({'result' : 'success'})
+        else :
+            return jsonify({'result' : 'failure'})
+
+
+# 댓글 작성 기능
+@app.route('/makeComment', methods = ['POST'])
+@jwt_required()
+def makeComment():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        year = str(datetime.today().year)
+        month = str(datetime.today().month)
+        date = str(datetime.today().day)
+
+        time = year + "/" + month + "/" + date # 작성일자
+        articleId = ObjectId(request.form['articleId']) # _id값
+        name = request.form['name'] # 이름
+        house = request.form['house'] # 호실
+        text = request.form['text'] # 댓글내용
+        
+        # 댓글 작성
+        result = db.comment.insert_one({'article_id':articleId, 'name':name, 'house':house, 'text':text, 'date':time})
+
+        if result.acknowledged == 1:
+            return jsonify({'result':'success'})
+        else:
+            return jsonify({'result':'failure'})
+
+
 # 로그인 성공 시 게시글 리스트로 이동
 @app.route('/listAuth', methods = ['POST'])
 @jwt_required()
@@ -170,20 +252,34 @@ def list():
 
     user = db.user.find_one({'name':name, 'house':house})
 
-    if user:
-        grade = user.get('grade')  # grade 필드 값 가져오기
-        number = user.get('number')  # number 필드 값 가져오기
-        if grade == '0' and number  == '0':
-            return jsonify({'result':'admin'})
-        else:
-            return jsonify({'result':'success'})
+    if user:    
+        return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
 
-# @app.route('/test')
-# def test(userName):
-#     return render_template('jinjaTest.html')
+@app.route('/boardList')
+def good():
+    return render_template('boardList.html', userName='양선규')
+    
 
+# 모든 호실 미처리 문의 리스트
+@app.route('/noList', methods = ['POST'])
+@jwt_required()
+def noList():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 관리자일 경우 로직 실행
+    if name == '타잔' and house == '0':
+        noList = db.article.find({'state':'0'}) # 미처리 문의 전부 가져오기
+        
+        if noList: # 미처리 문의가 1개 이상 존재할 경우
+            return jsonify({'result':'success', 'noList':noList})
+        else:
+            return jsonify({'result':'failure'})
+# 관리자 페이지 호실 인원 리스트
 @app.route('/joinHouse', methods =['POST'])
 @jwt_required()
 def joinHouse():        # 관리자가 로그인 했을 경우
@@ -201,9 +297,65 @@ def joinHouse():        # 관리자가 로그인 했을 경우
     else:
         return jsonify({'result':'failure'})
 
+# 관리자 페이지 "호실 문의 리스트 확인"
+@app.route('/checkList', methods =['POST'])
+@jwt_required()
+def checkList():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
 
+        home = db.comment.find({'house':user_house})
 
+        return jsonify({'result':'success','home':home})
+    else:
+        return jsonify({'result':'failure'})
+    
+# 관리자 페이지 "체크 인원 수정 처리"
+@app.route('/modifyUser', methods =['POST'])
+@jwt_required()
+def modifyUser():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+        user_name = request.form['name']
 
+        user_grade = request.form['grade']
+        user_number = request.form['number']
+        new_user_name = request.form['new_name']
+        home = db.user.find_one({'house':user_house,'name':user_name})
+        if home :    
+            db.user.update_one({'house':user_house,'name':user_name},{"$set": {"grade": user_grade, "number": user_number, "name": new_user_name}})
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure'})
+
+# 관리자 페이지 "체크 인원 퇴사 처리"
+@app.route('/deleteUser', methods =['POST'])
+@jwt_required()
+def deleteUser():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+        user_name = request.form['name']
+        home = db.user.find_one({'house':user_house,'name':user_name})
+        if home :    
+            db.user.delete_one({'name':user_name})
+        return jsonify({'result':'success'})    
+    else:
+        return jsonify({'result':'failure'})
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
 # 다른 파일에서 이 코드를 import하여 모듈을 이용할 수 있게 한다
