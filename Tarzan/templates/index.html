@@ -63,7 +63,7 @@
     </style>
     <script>
         $( document ).ready(function() {
-            let id_regex = /^\d{2}-\d{1,3}$/;
+            let id_regex = /^\d{1,3}-\d{1,3}$/;
             $("input[name='number']").on("input", function() {
               let numberValue = $(this).val();
               if(id_regex.test(numberValue)){
