@@ -105,37 +105,36 @@ def login():
         return jsonify({'result':'failure'})
     
 
-project_list = {}
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
-    project_list = {}
+    project_list = []
     current_user = get_jwt_identity() 
     name =current_user[0]
-    house = current_user[1]
-    print(name, house)
+    house = str(current_user[1])
 
     title = request.form['title']
     content = request.form['content']
-    print(title, content)
 
-    year = datetime.today().year
-    month = datetime.today().month
-    date = datetime.today().day
+    year = str(datetime.today().year)
+    month = str(datetime.today().month)
+    date = str(datetime.today().day)
     time = year + "/" + month + "/" + date
 
-    db.article.insert_one({'state':"미처리",'title':title,'text':content,'date':time,'house':house,'name':name})
-    house_list = list(db.article.find({'house':house},{'name':name}))
-    print(house_list[0])
+    # 중복된 글이 없을때만 DB에 저장한다
+    writeGo = db.article.find_one({'title':title, 'text':content})
+    if not writeGo and title != '' and content != '': 
+        db.article.insert_one({'state':'0','title':title,'text':content,'date':time,'house':house,'name':name})
 
-    if title and content:
-        for i in house_list :           # house_list 값이 비어 있을 경우?
-            if i not in project_list:
-                project_list.append({'title': title,'date':time, 'house':house})
-                print(project_list)
-        return jsonify({'status': 'success', 'project_list':project_list})
-    else:
-        return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
+    house_list = db.article.find({'house':house,'name':name})
+
+    # if title and content:
+    for i in house_list :           # house_list 값이 비어 있을 경우?
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house']})
+
+    return jsonify({'status': 'success', 'project_list':project_list})
+    # else:
+        # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
 
 # 로그인 성공 시 게시글 리스트로 이동
