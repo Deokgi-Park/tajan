@@ -15,12 +15,26 @@ $.ajax({
     }
 });
 
+
+$.ajax({
+    type: "POST",
+    url: "/login",
+    data: {'number' : '0-0', 'password' : "tarzanjjang"},
+    success: function (response) {
+        if (response.result == 'success') {
+            alert('좋아요 완료!')
+        } else {
+            alert('좋아요 실패ㅠㅠ')
+        }
+    }
+});
+
 // 토큰으로 로그인 수행
 $.ajax({
     url: "/listAuth", // 요청을 보낼 엔드포인트 URL
     type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
     headers: {
-        "Authorization": "Bearer " + document.cookie // JWT 토큰을 Authorization 헤더에 포함
+        "Authorization": "Bearer " + getCookie("access_token")// JWT 토큰을 Authorization 헤더에 포함
     },
     success: function(response) {
         debugger;

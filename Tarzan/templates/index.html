@@ -88,17 +88,34 @@
           $("input[name='number']").addClass("is-danger");
         }
       })
-
-
+      $(document).keypress(function (event) {
+        if (event.keyCode === 13) {
+          $('#loginButton').click(); 
+        }
+      });
       $("#loginButton").click(function () {
         $("#loginButton").addClass('is-loading');
 
       })
     })
-    function createCookie(value) {
-      document.cookie = value;
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // 쿠키 이름으로 시작하는 쿠키를 찾음
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
     }
-
+    function deleteCookie(name) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
     function login() {
       let formData = $('#firstForm')
 
@@ -107,41 +124,35 @@
         url: "/login",
         data: formData.serialize(),
         success: function (response) {
-          if (response['result'] == 'success') {
-            if (response['access_token']) {
-              createCookie(response['access_token'])
-              $.ajax({
-                url: "/listAuth", // 요청을 보낼 엔드포인트 URL
-                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
-                headers: {
-                  "Authorization": "Bearer " + document.cookie // JWT 토큰을 Authorization 헤더에 포함
-                },
-                success: function (response) {
-                  debugger;
-                  // 요청이 성공인 경우 이동
-                  if (response.result == 'admin')
-                    window.location.href = '/loginManager';
-                  else if (response.result == 'success')
-                    window.location.href = '/loginUser';
-                  else
-                    alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.')
-                },
-                error: function (xhr, status, error) {
-                  // 요청이 실패한 경우 또는 오류가 발생한 경우
-                  alert('인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
-                  console.error("요청 실패 또는 오류 발생:", status, error);
-                }
-              });
-            } else {
-              alert('서버 연결에 성공했으나 인증 토큰에 문제가 발생했습니다.');
-            }
+          if (response.result == 'success') {
+            $.ajax({
+              url: "/listAuth", // 요청을 보낼 엔드포인트 URL
+              type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+              headers: {
+                "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+              },
+              success: function (response) {
+                // 요청이 성공인 경우 이동
+                if (response.result == 'admin')
+                  window.location.href = '/loginManager';
+                else if (response.result == 'success')
+                  window.location.href = '/loginUser';
+                else
+                  alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.')
+              },
+              error: function (xhr, status, error) {
+                // 요청이 실패한 경우 또는 오류가 발생한 경우
+                alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                console.error("요청 실패 또는 오류 발생:", status, error);
+              }
+            });
           }
-          else{
+          else {
             alert('로그인에 실패했습니다. 입력정보를 확인하세요.');
           }
           $("#loginButton").removeClass('is-loading');
         },
-        error:function(error){
+        error: function (error) {
           alert("토큰발급 실패 : " + error)
         }
       });

@@ -1,13 +1,15 @@
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response, session
 from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
 
 from datetime import datetime
 from jinja2 import Template
+
+from datetime import timedelta
 
 
 import json
@@ -77,41 +79,34 @@ def regiUser():
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     pw = request.form['password']
-    print(user_id, pw)
 
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
-    grade = int(user[0])
-    number = int(user[1])
-    print(grade,number)
+    grade = user[0]
+    number = user[1]
 
     # 일치하는 회원 찾기
     user = db.user.find_one({'grade':grade, 'number':number, 'pw':pw})
-    print(user)
 
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        name = user['name']
-        house = user['house']
-
-        return jsonify({
-            'result':'success',
-            'access_token': create_access_token(identity=userData,
-                                                expires_delta=False) # 토큰 만료시간
-        })
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=1))
+        response = make_response(jsonify({'result': 'success'}))
+        response.set_cookie('access_token', access_token)
+        return response
     else:
-        return jsonify({'result':'failure'})
+        response = make_response(jsonify({'result': 'failed'}))
+        return response
 
 @app.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
     current_user = get_jwt_identity()
-    name =current_user[0]
-    response = jsonify({'message': name + '님 로그아웃 되었습니다.'})
+    name = current_user[0]
+    response = make_response(jsonify({'message': name + '님 로그아웃 되었습니다.',"tokenname": "access_token"}))
     unset_jwt_cookies(response)
     return response
-
 
 @app.route('/loginManager')
 def loginManager():
