@@ -1,10 +1,12 @@
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response
 from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
+
+from datetime import datetime, timedelta
 
 from datetime import datetime
 from jinja2 import Template
@@ -82,8 +84,8 @@ def login():
 
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
-    grade = int(user[0])
-    number = int(user[1])
+    grade = user[0]
+    number = user[1]
     print(grade,number)
 
     # 일치하는 회원 찾기
@@ -252,8 +254,13 @@ def list():
 
     user = db.user.find_one({'name':name, 'house':house})
 
-    if user:    
-        return jsonify({'result':'success'})
+    if user:
+        grade = user.get('grade')  # grade 필드 값 가져오기
+        number = user.get('number')  # number 필드 값 가져오기
+        if grade == '0' and number  == '0':
+            return jsonify({'result':'admin'})
+        else:
+            return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
 
