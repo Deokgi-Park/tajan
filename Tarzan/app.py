@@ -6,6 +6,8 @@ from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
 
+from datetime import datetime, timedelta
+
 from datetime import datetime
 from jinja2 import Template
 
@@ -59,8 +61,8 @@ def addUser():
 # API 시작, 회원가입 체크
 @app.route('/regiUser', methods=['POST'])
 def regiUser():
-    grade = int(request.form['grade'])
-    number = int(request.form['number'])  # 기수-학번으로 입력받는다. ex)5-25
+    grade = request.form['grade']
+    number = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     name = request.form['name']
     pw = request.form['pw']
     print(grade,name,number,pw)
@@ -89,13 +91,12 @@ def login():
     if user:
         userData = [user['name'], user['house']]
         access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=30))
-        response = make_response(jsonify({'result': 'success'}))
+        response = make_response(jsonify({'result': 'success', "grade": grade, "number":number }))
         response.set_cookie('access_token', access_token)
         return response
     else:
         response = make_response(jsonify({'result': 'failed'}))
         return response
-    
 
 @app.route('/logout', methods=['POST'])
 @jwt_required()
@@ -106,19 +107,27 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
-
 @app.route('/loginManager')
 def loginManager():
-        return render_template('managerPage.html')
-
+        return render_template('managerPage.html', name='test')
 
 @app.route('/loginUser')
 def loginUser():
         return render_template('mainPage.html')
 
-    
+#모니터링 템플렛 호출 페이지
+@app.route('/batchHouse', methods=['POST'])
+@jwt_required()
+def batchHouse():
+    current_user = get_jwt_identity()
+    houselist = db.user.distinct('house')
+    houseAddCnt =[]
+    for house in houselist :
+        CNT = db.article.count_documents({"house": house, "state": "0"})
+        houseAddCnt.append({house : CNT})
+    print(houseAddCnt)
+    return render_template('monitering.html', houseList = houselist, houseAddCnt=houseAddCnt)
 
-# 메인 페이지 로드 시 실행
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
@@ -249,6 +258,7 @@ def list():
     name = current_user[0]
     house = current_user[1]
     user = db.user.find_one({'name':name, 'house':house})
+
     if user:
         grade = user.get('grade')  # grade 필드 값 가져오기
         number = user.get('number')  # number 필드 값 가져오기
