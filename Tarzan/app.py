@@ -103,7 +103,7 @@ def login():
     else:
         return jsonify({'result':'failure'})
 
-<<<<<<< HEAD
+
 @app.route('/loginManager')
 def loginManager():
         return render_template('managerPage.html')
@@ -113,8 +113,7 @@ def loginUser():
         return render_template('mainPage.html')
 
 
-=======
->>>>>>> b6fd1f4edeaa6c41e7d61d77a06d1fa45dd68eea
+
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
