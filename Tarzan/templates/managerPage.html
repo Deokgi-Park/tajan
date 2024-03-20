@@ -39,7 +39,8 @@
         #rightSection {
             border-radius: 10px 10px;
         }
-        article{
+
+        article {
             cursor: pointer;
         }
     </style>
@@ -48,7 +49,7 @@
             $(".icon").css("color", "#f14668");
             document.getElementById("colorSelect").addEventListener("change", function () {
                 changeColor(this);
-            });           
+            });
             batchHouse();
             setInterval(() => batchHouse(), 30000);
         });
@@ -125,9 +126,9 @@
         }
         function openModal(type) {
             switch (type) {
-                case 1: // 호실별 문의 리스트 / 미완료 문의 리스트
+                case 1: // 호실별 문의 리스트
                     $(".modal.1").addClass('is-active');
-                    
+
                     break;
                 case 2:
                     $(".modal.2").addClass('is-active');
@@ -135,11 +136,29 @@
                 case 3:
                     $(".modal.3").addClass('is-active');
                     break;
-                default:
+                default: // 모든 호실 미처리 문의 리스트
+                    $(".modal.1").addClass('is-active');
+                    $.ajax({
+                        url: "/noList", // 요청을 보낼 엔드포인트 URL
+                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                        headers: {
+                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                        },
+                        success: function (response) {
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            // 요청이 실패한 경우 또는 오류가 발생한 경우
+                            alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                            console.error("요청 실패 또는 오류 발생:", status, error);
+                        }
+                    });
                     break;
             }
-
         }
+
+
         function changeColor(data) {
             let selectedColor = data.value; // 선택한 색상
             // 아이콘의 색상 변경
@@ -182,8 +201,8 @@
             });
         }
 
-         // 관리자 페이지 인원 리스트
-         function select_house(house_id){
+        // 관리자 페이지 인원 리스트
+        function select_house(house_id) {
             let house = $('#house').val()       //id 값에 따라 #house값 변경
             $.ajax({
                 type: 'POST',
@@ -191,10 +210,10 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house:house_id},
-                success: function(response) {
+                data: { house: house_id },
+                success: function (response) {
                     if (response['result'] == 'success') {
-                        for(let i =0 ; i<response.length;i++){
+                        for (let i = 0; i < response.length; i++) {
                             grade = response[i]['grade']
                             number = response[i]['number']
                             name = response[i]['name']
@@ -208,7 +227,7 @@
             });
         }
         // 관리자 페이지 "호실 문의 리스트 확인"
-        function help_list(house_id){
+        function help_list(house_id) {
             let house = $('#user_list').val()       //id 값에 따라 #user_list값 변경
             $.ajax({
                 type: 'POST',
@@ -216,16 +235,16 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house:house_id},
-                success: function(response) {
+                data: { house: house_id },
+                success: function (response) {
                     if (response['result'] == 'success') {
-                        for(let i =0 ; i<response.length;i++){
+                        for (let i = 0; i < response.length; i++) {
                             house = response[i]['house']
                             state = response[i]['state']
                             title = response[i]['title']
                             date = response[i]['date']
                             name = response[i]['name']
-                            inputHtml = '<h3>' + house + ' ' + state + ' ' + title + ' ' + name  +  ' ' + date +'</h3>';
+                            inputHtml = '<h3>' + house + ' ' + state + ' ' + title + ' ' + name + ' ' + date + '</h3>';
                             $('#user_list').append(inputHtml);          // 위와 동일
                         }
                     } else {
@@ -236,7 +255,7 @@
         }
 
         // 관리자 페이지 "체크 인원 수정 처리"
-        function modifyInformation(house_id, name_id, grade_id, number_id, new_name_id){
+        function modifyInformation(house_id, name_id, grade_id, number_id, new_name_id) {
             let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
                 type: 'POST',
@@ -244,15 +263,17 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house: house_id,
-                        name: name_id,
-                        grade: grade_id,
-                        number: number_id,
-                        new_name: new_name_id},
-                success: function(response) {
+                data: {
+                    house: house_id,
+                    name: name_id,
+                    grade: grade_id,
+                    number: number_id,
+                    new_name: new_name_id
+                },
+                success: function (response) {
                     if (response['result'] == 'success') {
                         alert('수정이 완료되었습니다.');
-                        window.location.reload();      
+                        window.location.reload();
                     } else {
                         alert(response.message);
                     }
@@ -260,7 +281,7 @@
             });
         }
         // 관리자 페이지 "체크 인원 퇴사 처리"
-        function deleteInformation(house_id, name_id){
+        function deleteInformation(house_id, name_id) {
             let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
                 type: 'POST',
@@ -268,13 +289,14 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house: house_id,
-                        name: name_id,
-                    },
-                success: function(response) {
+                data: {
+                    house: house_id,
+                    name: name_id,
+                },
+                success: function (response) {
                     if (response['result'] == 'success') {
                         alert('퇴사 처리가 완료되었습니다.');
-                        window.location.reload();      
+                        window.location.reload();
                     } else {
                         alert(response.message);
                     }
@@ -295,7 +317,7 @@
             </div>
         </div>
     </div>
-    <div class="columns" >
+    <div class="columns">
         <section class="column section is-9" id="moniter"></section>
         <section id="rightSection" class="section column has-background-success">
             <div class="title">
@@ -321,12 +343,13 @@
                     </label>
                 </div>
                 <div class="is-fullwidth" style="bottom: 5px;">
-                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)">호실 문의 리스트 확인</button>
+                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)" data-option="1">호실 문의 리스트
+                        확인</button>
                     <button class="is-fullwidth button is-info mb-1" onclick="openModal(2)">체크인원 수정 처리</button>
                     <button class="is-fullwidth button is-danger mb-1">체크인원 퇴사 처리</button>
                 </div>
             </div>
-            <button class="is-fullwidth button is-info mb-1" onclick="openModal(1)">미완료 문의 리스트</button>
+            <button class="is-fullwidth button is-info mb-1" onclick="openModal()" data-option="2">미완료 문의 리스트</button>
             <button class="is-fullwidth button is-info mb-1" type="button"> <a href="./managerUserUpload.html">기숙사 인원
                     리스트 추가(EXCEL)</a></button>
         </section>

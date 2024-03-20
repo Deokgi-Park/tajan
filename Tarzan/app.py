@@ -325,11 +325,15 @@ def noList():
     # 관리자일 경우 로직 실행
     if name == '타잔' and house == '0':
         noList = db.article.find({'state':'0'}) # 미처리 문의 전부 가져오기
+        nonoList = []
+
+        for i in noList: # 호실, 처리상태, 제목, 작성자, 작성일
+            nonoList.append({'house':i['house'], 'state':i['state'], 'title':i['title'], 'name':i['name'], 'date':i['date']})
         
         if noList: # 미처리 문의가 1개 이상 존재할 경우
-            return jsonify({'result':'success', 'noList':noList})
-        else:
-            return jsonify({'result':'failure'})
+            return jsonify({'result':'success', 'noList':nonoList})
+        else: # 미처리 문의가 없을 경우
+            return jsonify({'result':'failure', 'msg':'미처리 문의가 없습니다.'})
         
 
 # 관리자 페이지 호실 인원 리스트
