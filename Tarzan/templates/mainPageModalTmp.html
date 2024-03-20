@@ -37,7 +37,9 @@
         </div>
         <button id="updateDetail" class="is-fullwidth button is-info mb-1" style="border-radius: 0;"
             onclick="modifyArticle('{{article._id}}')">수정</button>
-        <button class="is-fullwidth button is-danger" style="border-radius: 0;"
+            <button id="updateDetail" class="is-fullwidth button is-danger mb-1" style="border-radius: 0;"
+            onclick="deleteArticle('{{article._id}}')">삭제</button>
+        <button class="is-fullwidth button is-danger is-light" style="border-radius: 0;"
             onclick="closeModal()">취소</button>
     </article>
     <section class="section column">
@@ -49,6 +51,9 @@
                             <div class="media-content">
                                 <div class="content">
                                     <p>
+                                        {% if c.name == '타잔' %}
+                                        <strong class = "has-background-warning">관리자</strong>
+                                        {% endif %}
                                         <strong>{{ c.name }}</strong>
                                         <br>
                                         {{ c.text }}
