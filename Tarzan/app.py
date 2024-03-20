@@ -78,14 +78,17 @@ def regiUser():
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     pw = request.form['password']
+    print(user_id, pw)
 
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
     grade = int(user[0])
     number = int(user[1])
+    print(grade,number)
 
     # 일치하는 회원 찾기
     user = db.user.find_one({'grade':grade, 'number':number, 'pw':pw})
+    print(user)
 
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:

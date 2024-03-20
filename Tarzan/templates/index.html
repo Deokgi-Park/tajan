@@ -1,67 +1,116 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>기숙사의 파수꾼 : : : Tarzan</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <style>
-        *{
-          text-align: center;
-          color : #48c78e;
-          font-family: "Noto Sans KR", sans-serif;
-        }
-        html{
-            overflow: auto;
-        }
-        .title{
-          font-size: 10em;
-        }
-        section.hero.is-medium{
-          position: relative;
-        }
-        section.hero.is-medium::before{
-          content:"";
-          background: white;
-          border-radius: 10px;
-          opacity:0.9;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-        body::before{
-          content:"";
-          background:url(/static/jungle.jpg) no-repeat;
-          background-size:cover;
-          opacity:0.5;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-        @media screen and (max-width: 600px) {
-          .title{
-            font-size: 3em;
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>기숙사의 파수꾼 : : : Tarzan</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    * {
+      text-align: center;
+      color: #48c78e;
+      font-family: "Noto Sans KR", sans-serif;
+    }
+
+    html {
+      overflow: auto;
+    }
+
+    .title {
+      font-size: 10em;
+    }
+
+    section.hero.is-medium {
+      position: relative;
+    }
+
+    section.hero.is-medium::before {
+      content: "";
+      background: white;
+      border-radius: 10px;
+      opacity: 0.9;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    body::before {
+      content: "";
+      background: url(/static/jungle.jpg) no-repeat;
+      background-size: cover;
+      opacity: 0.5;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .title {
+        font-size: 3em;
+      }
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function () {
+      $("#loginButton").click(function () {
+        $("#loginButton").addClass('is-loading');
+
+      })
+    })
+  </script>
+  <script>
+    function createCookie(value) {
+      document.cookie = value;
+    }
+
+    function login() {
+      let formData = $('#firstForm')
+
+      $.ajax({
+        type: "POST",
+        url: "/login",
+        data: formData.serialize(),
+        success: function (response) {
+          if (response['result'] == 'success') {
+            alert('완료!')
+            if (response['access_token']) {
+              createCookie(response['access_token'])
+              $.ajax({
+                type: "POST",
+                url: "/listAuth",
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                },
+                success: function (response) {
+                  if (response['result'] == 'success') {
+                    window.location.href = "http://localhost:33333/boardList" //서버주소로 수정해야 함!!!!!!!!!!!!!!!!!@@@@!!!!!!!
+                  }
+                  else {
+                    alert("오류!")
+                  }
+                }
+              })
+            } else {
+              alert('실패ㅠㅠ')
+            }
           }
         }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $( document ).ready(function() {
-            $("#loginButton").click(function(){
-                $("#loginButton").addClass('is-loading');
+      });
 
-            })
-        })
+    }
+  </script>
+</head>
 
-    </script>
-  </head>
-  <body>
+<body>
   <section class="section">
-    <div class="container">      
+    <div class="container">
       <section class="hero is-medium">
         <!-- Hero content: will be in the middle -->
         <div class="hero-body">
@@ -74,14 +123,15 @@
             </p>
           </div>
         </div>
-      </section>      
-      <form method="post" lass="columns is-three-fifths is-offset-one-fifth mt-3" action="/login">
+      </section>
+      <form id="firstForm" method="post" class="columns is-three-fifths is-offset-one-fifth mt-3" action="/login">
         <div class="column is-three-fifths is-offset-one-fifth">
           <div class="columns field">
             <div class="field column">
               <label class="label">학번</label>
               <div class="control has-icons-left has-icons-right">
-                <input name="number" class="input is-success" type="text" placeholder="학번 입력 예시) 기수-고유번호 : 5-18" value="">
+                <input id="number" name="number" class="input is-success" type="text" placeholder="학번 입력 예시) 기수-고유번호 : 5-18"
+                  value="">
                 <span class="icon is-small is-left">
                   <i class="fas fa-user"></i>
                 </span>
@@ -94,7 +144,7 @@
             <div class="field column">
               <label class="label">비밀번호</label>
               <div class="control has-icons-left has-icons-right">
-                <input name="password" class="input is-success" type="password" placeholder="*******" value="">
+                <input id="password" name="password" class="input is-success" type="password" placeholder="*******" value="">
                 <span class="icon is-small is-left">
                   <i class="fas fa-envelope"></i>
                 </span>
@@ -105,13 +155,15 @@
               <p style="display: none;" class="help is-success">This email is invalid</p>
             </div>
           </div>
-          <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;" href="/addUser">회원가입</a></div>
-          <div class="columns is-mobile loButton mt-1">
-              <button id="loginButton" class="column is-half is-offset-one-quarter button is-success is-size-4" >로그인</button>
+          <div style="text-align: right;"><a style="display: inline-block;" href="./addUser.html">회원가입</a></div>
+          <div class="columns is-mobile loButton">
+            <button id="loginButton"
+              class="column is-half is-offset-one-quarter button is-success is-size-4">로그인</button>
           </div>
         </div>
       </form>
     </div>
   </section>
-  </body>
+</body>
+
 </html>
