@@ -12,6 +12,7 @@ from datetime import datetime
 from jinja2 import Template
 
 from datetime import timedelta
+import pandas as pd
 
 import json
 import sys
@@ -112,7 +113,6 @@ def logout():
 @app.route('/loginManager')
 def loginManager():
         return render_template('managerPage.html', name='test')
-
 
 @app.route('/loginUser')
 def loginUser():
@@ -463,6 +463,31 @@ def deleteUser():        # 관리자가 로그인 했을 경우
     if home :    
         db.user.delete_one({'grade':grade,'number':number})
     return jsonify({'result':'success'})    
+
+# API 시작, 로그인 페이지(메인 페이지)
+@app.route('/excel')
+def excel():
+        return render_template('managerUserUpload.html')
+
+@app.route('/upload_excel', methods=['POST'])
+def upload_excel():
+    try:
+        # 엑셀 파일 받기
+        file = request.files['file']
+
+        # 엑셀 파일을 데이터프레임으로 읽기
+        df = pd.read_excel(file)
+
+        # 숫자 데이터를 문자열로 변환
+        df = df.applymap(str)
+
+        # 데이터프레임을 MongoDB에 저장
+        data = df.to_dict(orient='records')
+        db.user.insert_many(data)
+
+        return jsonify({'message': 'Excel data uploaded successfully!'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
 # 다른 파일에서 이 코드를 import하여 모듈을 이용할 수 있게 한다
