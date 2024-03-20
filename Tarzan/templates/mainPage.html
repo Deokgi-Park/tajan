@@ -216,6 +216,29 @@
 
             })
         }
+
+        
+        // 문의글 삭제 기능
+        function deleteArticle(articleId) {
+            $.ajax({
+                url: "/deleteArticle",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token")
+                },
+                data: {'articleId':articleId},
+                success: function (response) {
+                    if(response['result'] == 'success') {
+                        alert("문의가 삭제되었습니다.")
+                        location.reload() // 새로고침
+                    }
+                    else {
+                        alert("삭제에 실패했습니다!!")
+                    }
+                }
+            })
+        }
+
     </script>
 </head>
 

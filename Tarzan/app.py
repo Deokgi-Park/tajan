@@ -233,6 +233,29 @@ def modifyArticle():
         return jsonify({'result' : 'failure'})
 
 
+# 문의글 삭제 기능, 댓글까지 함께 삭제된다
+@app.route('/deleteArticle', methods = ['POST'])
+@jwt_required()
+def deleteArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+
+        articleId = ObjectId(request.form['articleId']) # 삭제할 글의 id값을 가져온다
+        result = db.article.delete_one({'_id':articleId}) # id에 해당하는 글을 삭제
+        result2 = db.comment.delete_many({'article_id':articleId}) # 댓글도 함께 삭제
+
+        if result.deleted_count == 1 and result2.acknowledged :
+            return jsonify({'result' : 'success'})
+        else :
+            return jsonify({'result' : 'failure'})
+
+
 # 댓글 작성 기능
 @app.route('/makeComment', methods = ['POST'])
 @jwt_required()
