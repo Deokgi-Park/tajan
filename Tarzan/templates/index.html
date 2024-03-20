@@ -1,96 +1,121 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>기숙사의 파수꾼 : : : Tarzan</title>
-        <!-- jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        <!-- Bulma -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    
-        <!-- Font awesome -->
-        <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
-        <script src="https://kit.fontawesome.com/eab63039c9.js" crossorigin="anonymous"></script>
-    
-        <!-- sans font -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet"><style>
-        *{
-          text-align: center;
-          color : #48c78e;
-          font-family: "Noto Sans KR", sans-serif;
-        }
-        html{
-            overflow: auto;
-        }
-        .title{
-          font-size: 10em;
-        }
-        section.hero.is-medium{
-          position: relative;
-        }
-        section.hero.is-medium::before{
-          content:"";
-          background: white;
-          border-radius: 10px;
-          opacity:0.9;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-        body::before{
-          content:"";
-          background:url(/static/jungle.jpg) no-repeat;
-          background-size:cover;
-          opacity:0.5;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-        @media screen and (max-width: 600px) {
-          .title{
-            font-size: 3em;
-          }
-        }
-    </style>
-    <script>
-        $( document ).ready(function() {
-            let id_regex = /^\d{1,3}-\d{1,3}$/;
-            $("input[name='number']").on("input", function() {
-              let numberValue = $(this).val();
-              if(id_regex.test(numberValue)){
-                $("#idWarning").text("ID 형식이 일치합니다.");
-                $("#idWarning").removeClass("is-danger");
-                $("#idWarning").addClass("is-success");
-                $("input[name='number']").removeClass("is-danger");
-                $("input[name='number']").addClass("is-success");
-              }
-              else{
-                $("#idWarning").text("ID 형식이 불일치합니다.");
-                $("#idWarning").removeClass("is-success");
-                $("#idWarning").addClass("is-danger");
-                $("input[name='number']").removeClass("is-success");
-                $("input[name='number']").addClass("is-danger");
-              }
-            })
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>기숙사의 파수꾼 : : : Tarzan</title>
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-            
-            $("#loginButton").click(function(){
-                $("#loginButton").addClass('is-loading');
+  <!-- Bulma -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 
-            })
-        })
-        function createCookie(value) {
-      document.cookie = value;
+  <!-- Font awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+  <script src="https://kit.fontawesome.com/eab63039c9.js" crossorigin="anonymous"></script>
+
+  <!-- sans font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      text-align: center;
+      color: #48c78e;
+      font-family: "Noto Sans KR", sans-serif;
     }
 
+    html {
+      overflow: auto;
+    }
+
+    .title {
+      font-size: 10em;
+    }
+
+    section.hero.is-medium {
+      position: relative;
+    }
+
+    section.hero.is-medium::before {
+      content: "";
+      background: white;
+      border-radius: 10px;
+      opacity: 0.9;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    body::before {
+      content: "";
+      background: url(/static/jungle.jpg) no-repeat;
+      background-size: cover;
+      opacity: 0.5;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .title {
+        font-size: 3em;
+      }
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+      let id_regex = /^\d{1,3}-\d{1,3}$/;
+      $("input[name='number']").on("input", function () {
+        let numberValue = $(this).val();
+        if (id_regex.test(numberValue)) {
+          $("#idWarning").text("ID 형식이 일치합니다.");
+          $("#idWarning").removeClass("is-danger");
+          $("#idWarning").addClass("is-success");
+          $("input[name='number']").removeClass("is-danger");
+          $("input[name='number']").addClass("is-success");
+        }
+        else {
+          $("#idWarning").text("ID 형식이 불일치합니다.");
+          $("#idWarning").removeClass("is-success");
+          $("#idWarning").addClass("is-danger");
+          $("input[name='number']").removeClass("is-success");
+          $("input[name='number']").addClass("is-danger");
+        }
+      })
+      $(document).keypress(function (event) {
+        if (event.keyCode === 13) {
+          $('#loginButton').click(); 
+        }
+      });
+      $("#loginButton").click(function () {
+        $("#loginButton").addClass('is-loading');
+
+      })
+    })
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // 쿠키 이름으로 시작하는 쿠키를 찾음
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    function deleteCookie(name) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
     function login() {
       let formData = $('#firstForm')
 
@@ -99,37 +124,43 @@
         url: "/login",
         data: formData.serialize(),
         success: function (response) {
-          if (response['result'] == 'success') {
-            alert('완료!')
-            if (response['access_token']) {
-              createCookie(response['access_token'])
-              $.ajax({
-                type: "POST",
-                url: "/listAuth",
-                beforeSend: function (xhr) {
-                  xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
-                },
-                success: function (response) {
-                  if (response['result'] == 'success') {
-                    //서버주소로 수정해야 함!!!!!!!!!!!!!!!!!@@@@!!!!!!!
-                    window.location.href = "/boardList" 
-                  }
-                  else {
-                    alert("오류!")
-                  }
-                }
-              })
-            } else {
-              alert('실패ㅠㅠ')
-            }
+          if (response.result == 'success') {
+            $.ajax({
+              url: "/listAuth", // 요청을 보낼 엔드포인트 URL
+              type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+              headers: {
+                "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+              },
+              success: function (response) {
+                // 요청이 성공인 경우 이동
+                if (response.result == 'admin')
+                  window.location.href = '/loginManager';
+                else if (response.result == 'success')
+                  window.location.href = '/loginUser';
+                else
+                  alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.')
+              },
+              error: function (xhr, status, error) {
+                // 요청이 실패한 경우 또는 오류가 발생한 경우
+                alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                console.error("요청 실패 또는 오류 발생:", status, error);
+              }
+            });
           }
+          else {
+            alert('로그인에 실패했습니다. 입력정보를 확인하세요.');
+          }
+          $("#loginButton").removeClass('is-loading');
+        },
+        error: function (error) {
+          alert("토큰발급 실패 : " + error)
         }
       });
-
     }
-    </script>
-  </head>
-  <body>
+  </script>
+</head>
+
+<body>
   <section class="section">
     <div class="container">
       <section class="hero is-medium">
@@ -151,7 +182,8 @@
             <div class="field column">
               <label class="label">ID</label>
               <div class="control has-icons-left has-icons-right">
-                <input name="number" class="input is-success" type="text" placeholder="ID 입력 예시) 기수-고유번호 : 5-18" value="">
+                <input name="number" class="input is-success" type="text" placeholder="ID 입력 예시) 기수-고유번호 : 5-18"
+                  value="">
                 <span class="icon is-small is-left">
                   <i class="fas fa-user"></i>
                 </span>
@@ -161,7 +193,8 @@
             <div class="field column">
               <label class="label">PW</label>
               <div class="control has-icons-left has-icons-right">
-                <input id="password" name="password" class="input is-success" type="password" placeholder="*******" value="">
+                <input id="password" name="password" class="input is-success" type="password" placeholder="*******"
+                  value="">
                 <span class="icon is-small is-left">
                   <i class="fa-solid fa-key"></i>
                 </span>
@@ -170,9 +203,11 @@
             </div>
           </div>
           <div class="columns is-mobile loButton mt-1">
-            <button id="loginButton" type="button" onclick="login()" class="column is-half is-offset-one-quarter button is-success is-size-4" >로그인</button>
+            <button id="loginButton" type="button" onclick="login()"
+              class="column is-half is-offset-one-quarter button is-success is-size-4">로그인</button>
           </div>
-          <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;" href="/addUser">회원가입</a></div>
+          <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;"
+              href="/addUser">회원가입</a></div>
         </div>
       </form>
     </div>
