@@ -4,7 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>기숙사의 파수꾼 : : : Tarzan</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+
+    <!-- Font awesome -->
+    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+    <script src="https://kit.fontawesome.com/eab63039c9.js" crossorigin="anonymous"></script>
+
+    <!-- sans font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
     <style>
         *{
           text-align: center;
@@ -48,13 +61,33 @@
           }
         }
     </style>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
         $( document ).ready(function() {
+            let id_regex = /^\d{2}-\d{1,3}$/;
+            $("input[name='number']").on("input", function() {
+              let numberValue = $(this).val();
+              if(id_regex.test(numberValue)){
+                $("#idWarning").text("ID 형식이 일치합니다.");
+                $("#idWarning").removeClass("is-danger");
+                $("#idWarning").addClass("is-success");
+                $("input[name='number']").removeClass("is-danger");
+                $("input[name='number']").addClass("is-success");
+              }
+              else{
+                $("#idWarning").text("ID 형식이 불일치합니다.");
+                $("#idWarning").removeClass("is-success");
+                $("#idWarning").addClass("is-danger");
+                $("input[name='number']").removeClass("is-success");
+                $("input[name='number']").addClass("is-danger");
+              }
+            })
+
+            
             $("#loginButton").click(function(){
                 $("#loginButton").addClass('is-loading');
 
-            })
+            });
+
         })
 
     </script>
@@ -79,36 +112,30 @@
         <div class="column is-three-fifths is-offset-one-fifth">
           <div class="columns field">
             <div class="field column">
-              <label class="label">학번</label>
+              <label class="label">ID</label>
               <div class="control has-icons-left has-icons-right">
-                <input name="number" class="input is-success" type="text" placeholder="학번 입력 예시) 기수-고유번호 : 5-18" value="">
+                <input name="number" class="input is-success" type="text" placeholder="ID 입력 예시) 기수-고유번호 : 5-18" value="">
                 <span class="icon is-small is-left">
                   <i class="fas fa-user"></i>
                 </span>
-                <span class="icon is-small is-right">
-                  <i class="fas fa-check"></i>
-                </span>
               </div>
-              <p style="display: none;" class="help is-success">This username is available</p>
+              <p style="font-weight: bold; height: 40px;" id="idWarning" class="help is-danger"></p>
             </div>
             <div class="field column">
-              <label class="label">비밀번호</label>
+              <label class="label">PW</label>
               <div class="control has-icons-left has-icons-right">
                 <input name="password" class="input is-success" type="password" placeholder="*******" value="">
                 <span class="icon is-small is-left">
-                  <i class="fas fa-envelope"></i>
-                </span>
-                <span class="icon is-small is-right">
-                  <i class="fas fa-exclamation-triangle"></i>
+                  <i class="fa-solid fa-key"></i>
                 </span>
               </div>
-              <p style="display: none;" class="help is-success">This email is invalid</p>
+              <p style="font-weight: bold;" id="pwWarning" class="help is-danger"></p>
             </div>
           </div>
-          <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;" href="/addUser">회원가입</a></div>
           <div class="columns is-mobile loButton mt-1">
               <button id="loginButton" class="column is-half is-offset-one-quarter button is-success is-size-4" >로그인</button>
           </div>
+          <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;" href="/addUser">회원가입</a></div>
         </div>
       </form>
     </div>
