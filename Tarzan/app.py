@@ -174,6 +174,23 @@ def list():
 # def test(userName):
 #     return render_template('jinjaTest.html')
 
+@app.route('/joinHouse', methods =['POST'])
+@jwt_required()
+def joinHouse():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+
+        home = db.user.find({'house':user_house})
+
+        return jsonify({'result':'success','home':home})
+    else:
+        return jsonify({'result':'failure'})
+
 
 
 
