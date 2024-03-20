@@ -255,7 +255,83 @@ def noList():
             return jsonify({'result':'success', 'noList':noList})
         else:
             return jsonify({'result':'failure'})
+# 관리자 페이지 호실 인원 리스트
+@app.route('/joinHouse', methods =['POST'])
+@jwt_required()
+def joinHouse():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
 
+        home = db.user.find({'house':user_house})
+
+        return jsonify({'result':'success','home':home})
+    else:
+        return jsonify({'result':'failure'})
+
+# 관리자 페이지 "호실 문의 리스트 확인"
+@app.route('/checkList', methods =['POST'])
+@jwt_required()
+def checkList():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+
+        home = db.comment.find({'house':user_house})
+
+        return jsonify({'result':'success','home':home})
+    else:
+        return jsonify({'result':'failure'})
+    
+# 관리자 페이지 "체크 인원 수정 처리"
+@app.route('/modifyUser', methods =['POST'])
+@jwt_required()
+def modifyUser():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+        user_name = request.form['name']
+
+        user_grade = request.form['grade']
+        user_number = request.form['number']
+        new_user_name = request.form['new_name']
+        home = db.user.find_one({'house':user_house,'name':user_name})
+        if home :    
+            db.user.update_one({'house':user_house,'name':user_name},{"$set": {"grade": user_grade, "number": user_number, "name": new_user_name}})
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure'})
+
+# 관리자 페이지 "체크 인원 퇴사 처리"
+@app.route('/deleteUser', methods =['POST'])
+@jwt_required()
+def deleteUser():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+    
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+        user_name = request.form['name']
+        home = db.user.find_one({'house':user_house,'name':user_name})
+        if home :    
+            db.user.delete_one({'name':user_name})
+        return jsonify({'result':'success'})    
+    else:
+        return jsonify({'result':'failure'})
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
 # 다른 파일에서 이 코드를 import하여 모듈을 이용할 수 있게 한다
