@@ -88,7 +88,7 @@ def login():
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=1))
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=30))
         response = make_response(jsonify({'result': 'success'}))
         response.set_cookie('access_token', access_token)
         return response
@@ -167,11 +167,11 @@ def joinArticle():
         articleId = ObjectId(request.form['articleId']) # _id값 수신
 
         article = db.article.find_one({'_id':articleId}) # 글 찾기
-        comment = db.article.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+        comment = db.comment.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+
         commentList = []
         for i in comment:
             commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
-            
 
         return jsonify({'result':'success', 'article':article, 'comment':commentList})
     else:
@@ -194,6 +194,13 @@ def modifyArticle():
         changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
         changeText = request.form['text']
         changeState = request.form['state']
+        
+        if changeState == '미처리':
+            changeState = '0'
+        elif changeState == '진행중':
+            changeState = '1'
+        else:
+            changeState = '2'
 
         result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
 
@@ -275,7 +282,7 @@ def noList():
         else:
             return jsonify({'result':'failure'})
         
-        
+
 # 관리자 페이지 호실 인원 리스트
 @app.route('/joinHouse', methods =['POST'])
 @jwt_required()

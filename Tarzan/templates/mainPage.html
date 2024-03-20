@@ -42,7 +42,10 @@
                 case 2:
                     $(".modal.2").addClass('is-active');
 
+
+
                     // 문의 글 상세 페이지(제목, 내용, 댓글)
+                    $('#cobox').empty()
                     $.ajax({
                         url: "/joinArticle", // 요청을 보낼 엔드포인트 URL
                         type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
@@ -52,6 +55,7 @@
                         data: { 'articleId': articleId },
                         success: function (response) {
                             if (response['result'] == 'success') {
+                                $('#updateDetail').attr('onclick', "modifyArticle('" + articleId + "')")
 
                                 // 제목, 내용 출력
                                 title = response['article']['title']
@@ -60,12 +64,11 @@
                                 $('#textt').val(text)
 
                                 // 댓글 출력
-                                $('#cobox').empty()
-                                for (let i = 0; i < response['commentList'].length; i++) {
+                                for (let i = 0; i < response['comment'].length; i++) {
 
-                                    name = response['commentList'][i]['name']
-                                    co_text = response['commentList'][i]['text']
-                                    date = response['commentList'][i]['date']
+                                    name = response['comment'][i]['name']
+                                    co_text = response['comment'][i]['text']
+                                    date = response['comment'][i]['date']
 
                                     inputHtml = `
                                     <article class="media">
@@ -81,16 +84,14 @@
                                             </div>
                                         </div>
                                     </article>`
-                                    
+
                                     $('#cobox').append(inputHtml)
                                 }
 
                             }
 
-                        }
+                        },
                     })
-
-
                     break;
                 default:
                     break;
@@ -216,6 +217,39 @@
             });
         }
 
+        // 수정버튼
+        function modifyArticle(articleId) {
+            title = $('#titlee').val()
+            text = $('#textt').val()
+            state = $('#colorSelect').val();
+
+            $.ajax({
+                url: "/modifyArticle", // 요청을 보낼 엔드포인트 URL
+                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                },
+                data: { 'articleId': articleId, 'title': title, 'text': text, 'state': state },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("수정 완료!")
+                        submit2()
+                    }
+                    else {
+                        alert("수정 실패!")
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // 요청이 실패한 경우 또는 오류가 발생한 경우
+                    alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                    console.error("요청 실패 또는 오류 발생:", status, error);
+                }
+            });
+        }
+
+
+
+
 
 
     </script>
@@ -338,7 +372,8 @@
                     <textarea id="textt" style="min-height: 20em;" class="textarea is-success"
                         placeholder="본문 내용을 입력해주세요"></textarea>
                 </div>
-                <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;">수정</button>
+                <button id="updateDetail" class="is-fullwidth button is-info mb-1" style="border-radius: 0;"
+                    onclick="modifyArticle()">수정</button>
                 <button class="is-fullwidth button is-danger" style="border-radius: 0;"
                     onclick="closeModal()">취소</button>
             </article>
@@ -392,7 +427,7 @@
                 <div>
                     <textarea style="min-height: 4em; border: 0; margin-top: 1em;" class="textarea is-success"
                         placeholder="댓글 내용을 입력해주세요"></textarea>
-                    <button class="is-fullwidth button is-info mb-1"">댓글 등록</button>
+                    <button class="is-fullwidth button is-info mb-1">댓글 등록</button>
                 </div>
             </section>
         </div>
