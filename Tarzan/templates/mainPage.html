@@ -29,16 +29,68 @@
         }
     </style>
     <script>
+        $(document).ready(submit2)
+
         function closeModal() {
             $(".modal").removeClass('is-active');
         }
-        function openModal(type) {
+        function openModal(type, articleId) {
             switch (type) {
                 case 1:
                     $(".modal.1").addClass('is-active');
                     break;
                 case 2:
                     $(".modal.2").addClass('is-active');
+
+                    // 문의 글 상세 페이지(제목, 내용, 댓글)
+                    $.ajax({
+                        url: "/joinArticle", // 요청을 보낼 엔드포인트 URL
+                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                        headers: {
+                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                        },
+                        data: { 'articleId': articleId },
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+
+                                // 제목, 내용 출력
+                                title = response['article']['title']
+                                text = response['article']['text']
+                                $('#titlee').val(title)
+                                $('#textt').val(text)
+
+                                // 댓글 출력
+                                $('#cobox').empty()
+                                for (let i = 0; i < response['commentList'].length; i++) {
+
+                                    name = response['commentList'][i]['name']
+                                    co_text = response['commentList'][i]['text']
+                                    date = response['commentList'][i]['date']
+
+                                    inputHtml = `
+                                    <article class="media">
+                                        <div class="media-content">
+                                            <div class="content">
+                                                <p>
+                                                    <strong>${name}</strong>
+                                                    <br>
+                                                        ${co_text}
+                                                    <br>
+                                                    <small>작성일: ${date}</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </article>`
+                                    
+                                    $('#cobox').append(inputHtml)
+                                }
+
+                            }
+
+                        }
+                    })
+
+
                     break;
                 default:
                     break;
@@ -105,6 +157,67 @@
                 }
             });
         })
+
+
+        function submit2() {
+            $('#lllist').empty()
+            let title = $('#ttitle').val()
+            let content = $('#ttext').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/add_article',
+                headers: { "Authorization": "Bearer " + getCookie("access_token") },
+                data: { title: title, content: content },
+                success: function (response) {
+                    if (response['status'] == 'success') {
+                        project_list = response.project_list
+
+                        for (let i = 0; i < project_list.length; i++) {
+                            title = project_list[i]['title']
+                            date = project_list[i]['date']
+                            house = project_list[i]['house']
+                            state = project_list[i]['state']
+                            name = project_list[i]['name']
+                            articleId = project_list[i]['articleId']
+
+                            if (state == '0') {
+                                state = '미처리'
+                            }
+                            else if (state == '1') {
+                                state = '진행중'
+                            }
+                            else {
+
+                                state = '완료'
+                            }
+
+                            // inputHtml = '<h3>' + house + ' ' + title + ' ' + date + '</h3>';
+                            inputHtml = `<tr>
+                                <td>${house}호</td>
+                                <td><span class="tag is-warning">${state}</span></td>
+                                <td><a href="#" onclick="openModal(2,'${articleId}')">${title}</a></td>
+                                <td>${name}</td>
+                                <td>${date}</td>
+                            </tr>`
+
+                            $('#lllist').append(inputHtml);
+                        }
+
+                    } else {
+                        alert(response.message);
+                    }
+                }
+                , error: function (xhr, status, error) {
+                    // 요청이 실패한 경우 또는 오류가 발생한 경우
+                    alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                    console.error("요청 실패 또는 오류 발생:", status, error);
+                }
+            });
+        }
+
+
+
     </script>
 </head>
 
@@ -151,7 +264,7 @@
                         <th>작성일</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="lllist">
                     <tr>
                         <td>1</td>
                         <td><span class="tag is-warning">진행중</span></td>
@@ -186,13 +299,14 @@
                     <p style="color: white;">XXX 호실 문의 글 등록</p>
                 </div>
                 <div class="message-header" style="border-radius: 0;">
-                    <input class="input mb-2" type="text" placeholder="제목">
+                    <input id="ttitle" class="input mb-2" type="text" placeholder="제목">
                 </div>
                 <div style="padding: 0 15px 15px; background-color: #48c774;">
-                    <textarea style="min-height: 20em;" class="textarea is-success"
+                    <textarea id="ttext" style="min-height: 20em;" class="textarea is-success"
                         placeholder="본문 내용을 입력해주세요"></textarea>
                 </div>
-                <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;">등록</button>
+                <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;"
+                    onclick="submit2()">등록</button>
                 <button class="is-fullwidth button is-danger" style="border-radius: 0;"
                     onclick="closeModal()">취소</button>
             </article>
@@ -218,10 +332,10 @@
                     </div>
                 </div>
                 <div class="message-header" style="border-radius: 0;">
-                    <input class="input mb-2" type="text" placeholder="제목">
+                    <input id="titlee" class="input mb-2" type="text" placeholder="제목">
                 </div>
                 <div style="padding: 0 15px 15px; background-color: #48c774;">
-                    <textarea style="min-height: 20em;" class="textarea is-success"
+                    <textarea id="textt" style="min-height: 20em;" class="textarea is-success"
                         placeholder="본문 내용을 입력해주세요"></textarea>
                 </div>
                 <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;">수정</button>
@@ -230,7 +344,7 @@
             </article>
             <section class="section column">
                 <div class="container">
-                    <div class="box" style="overflow: auto; max-height: 300px;">
+                    <div id="cobox" class="box" style="overflow: auto; max-height: 300px;">
                         <article class="media">
                             <div class="media-content">
                                 <div class="content">

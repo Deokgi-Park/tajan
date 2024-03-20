@@ -1,7 +1,7 @@
 from bson import ObjectId
 from pymongo import MongoClient
 
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response, session
 from flask.json.provider import JSONProvider
 from flask_jwt_extended import *
 from werkzeug.security import *
@@ -9,6 +9,7 @@ from werkzeug.security import *
 from datetime import datetime
 from jinja2 import Template
 
+from datetime import timedelta
 
 import json
 import sys
@@ -78,31 +79,43 @@ def regiUser():
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     pw = request.form['password']
-    print(user_id, pw)
-
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
-    grade = int(user[0])
-    number = int(user[1])
-    print(grade,number)
-
+    grade = user[0]
+    number = user[1]
     # 일치하는 회원 찾기
     user = db.user.find_one({'grade':grade, 'number':number, 'pw':pw})
-    print(user)
-
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        name = user['name']
-        house = user['house']
-
-        return jsonify({
-            'result':'success',
-            'access_token': create_access_token(identity=userData,
-                                                expires_delta=False) # 토큰 만료시간
-        })
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=1))
+        response = make_response(jsonify({'result': 'success'}))
+        response.set_cookie('access_token', access_token)
+        return response
     else:
-        return jsonify({'result':'failure'})
+        response = make_response(jsonify({'result': 'failed'}))
+        return response
+    
+
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    response = make_response(jsonify({'message': name + '님 로그아웃 되었습니다.',"tokenname": "access_token"}))
+    unset_jwt_cookies(response)
+    return response
+
+
+@app.route('/loginManager')
+def loginManager():
+        return render_template('managerPage.html')
+
+
+@app.route('/loginUser')
+def loginUser():
+        return render_template('mainPage.html')
+
     
 
 # 메인 페이지 로드 시 실행
@@ -131,7 +144,7 @@ def add_article():
 
     # if title and content:
     for i in house_list :           # house_list 값이 비어 있을 경우?
-        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id']})
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
 
     return jsonify({'status': 'success', 'project_list':project_list})
     # else:
@@ -155,8 +168,12 @@ def joinArticle():
 
         article = db.article.find_one({'_id':articleId}) # 글 찾기
         comment = db.article.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+        commentList = []
+        for i in comment:
+            commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
+            
 
-        return jsonify({'result':'success', 'article':article, 'comment':comment})
+        return jsonify({'result':'success', 'article':article, 'comment':commentList})
     else:
         return jsonify({'result':'failure'})
     
@@ -222,14 +239,16 @@ def makeComment():
 @jwt_required()
 def list():
     current_user = get_jwt_identity()
-
     name = current_user[0]
     house = current_user[1]
-
     user = db.user.find_one({'name':name, 'house':house})
-
-    if user:    
-        return jsonify({'result':'success'})
+    if user:
+        grade = user.get('grade')  # grade 필드 값 가져오기
+        number = user.get('number')  # number 필드 값 가져오기
+        if grade == '0' and number  == '0':
+            return jsonify({'result':'admin'})
+        else:
+            return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
 
@@ -255,6 +274,25 @@ def noList():
             return jsonify({'result':'success', 'noList':noList})
         else:
             return jsonify({'result':'failure'})
+        
+
+# 관리자 페이지 호실별 인원 리스트
+@app.route('/joinHouse', methods =['POST'])
+@jwt_required()
+def joinHouse():        # 관리자가 로그인 했을 경우
+    current_user = get_jwt_identity()
+    name = current_user[0]
+    house = current_user[1]
+
+    if name == "타잔" and house == "0":
+        # 호실 선택 시
+        user_house = request.form['house']
+
+        home = db.user.find({'house':user_house})
+
+        return jsonify({'result':'success','home':home})
+    else:
+        return jsonify({'result':'failure'})
 
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
