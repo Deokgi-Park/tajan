@@ -31,9 +31,12 @@
     <script>
         $(document).ready(function () {
             boardList();
-            $(document).keypress(function (event) {
+            const searchInput = document.getElementById('searchText');
+
+            searchInput.addEventListener('keyup', function (event) {
+                // 엔터 키의 keyCode가 13인지 확인하여 검색 실행
                 if (event.keyCode === 13) {
-                    $('#searchGo').click(); 
+                    searchArticle()   
                 }
             });
         })
@@ -61,7 +64,7 @@
                         },
                         error: function (error) {
                             alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                            window.location.href='/';
+                            window.location.href = '/';
                         }
                     })
                     break;
@@ -102,7 +105,7 @@
                 error: function (xhr, status, error) {
                     // 요청이 실패한 경우 또는 오류가 발생한 경우
                     alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
             });
         }
@@ -126,7 +129,7 @@
                 , error: function (xhr, status, error) {
                     // 요청이 실패한 경우 또는 오류가 발생한 경우
                     alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
             });
         }
@@ -147,10 +150,10 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert("수정 완료!")
-                        if($('#searchText').val()==''){
+                        if ($('#searchText').val() == '') {
                             boardList()
                         }
-                        else{
+                        else {
                             searchArticle()
                         }
                     }
@@ -161,7 +164,7 @@
                 error: function (xhr, status, error) {
                     // 요청이 실패한 경우 또는 오류가 발생한 경우
                     alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
             });
         }
@@ -186,9 +189,9 @@
                         alert("댓글 등록 실패!")
                     }
                 },
-                error: function(err){
+                error: function (err) {
                     alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
             })
         }
@@ -209,15 +212,15 @@
                     $("#lllist").prepend(response);
                     $('.modal').removeClass('is-active')
                 },
-                error: function(err){
+                error: function (err) {
                     alert('세션만료로 로그인 페이지로 이동합니다. 추가 발생 시 관리자에게 문의하세요')
-                    window.location.href='/';
+                    window.location.href = '/';
                 }
 
             })
         }
 
-        
+
         // 문의글 삭제 기능
         function deleteArticle(articleId) {
             $.ajax({
@@ -226,9 +229,9 @@
                 headers: {
                     "Authorization": "Bearer " + getCookie("access_token")
                 },
-                data: {'articleId':articleId},
+                data: { 'articleId': articleId },
                 success: function (response) {
-                    if(response['result'] == 'success') {
+                    if (response['result'] == 'success') {
                         alert("문의가 삭제되었습니다.")
                         location.reload() // 새로고침
                     }
