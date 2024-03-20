@@ -41,10 +41,12 @@
       right: 0px;
       bottom: 0px;
     }
-
-    .section::before {
+    .main{
+      height: 100%;
+    }
+    .main::before {
       content: "";
-      background: url(/static/jungle.jpg) no-repeat;
+      background: url(/static/jungle.jpg);
       background-size: cover;
       opacity: 0.5;
       position: absolute;
@@ -52,6 +54,7 @@
       left: 0px;
       right: 0px;
       bottom: 0px;
+      height: 100vh;
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -86,7 +89,6 @@
           alert("비밀번호를 재확인 하세요");
           $("#addin").removeClass('is-loading');
         }
-
       });
 
       $("#return").click(function () {
@@ -116,14 +118,11 @@
       }
 
     }
-
-
-
   </script>
 </head>
 
 <body>
-  <section class="section">
+  <section class="main section" style="padding-bottom: 0px;">
     <div class="container">
       <section class="hero is-medium">
         <!-- Hero content: will be in the middle -->
@@ -179,10 +178,10 @@
           </div>
 
           <div class="columns is-mobile loButton">
-            <button type="button" id="addin" class="column is-6 is-offset-3 button is-success is-size-4">가입요청</button>
+            <button type="button" id="addin" class="column is-6 is-offset-3 button is-success is-size-5">가입요청</button>
           </div>
           <div class="columns is-mobile mt-1">
-            <a id="return" href="/" class="column is-6 is-offset-3 button is-success is-size-4">돌아가기</a>
+            <a id="return" href="/" class="column is-6 is-offset-3 button is-success is-size-5">돌아가기</a>
           </div>
         </div>
       </form>
