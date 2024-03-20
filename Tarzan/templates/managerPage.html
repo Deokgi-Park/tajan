@@ -41,11 +41,20 @@
         #rightSection {
             border-radius: 10px 10px;
         }
-        article{
+
+        article {
             cursor: pointer;
         }
     </style>
     <script>
+        $(document).ready(function () {
+            $(".icon").css("color", "#f14668");
+            document.getElementById("colorSelect").addEventListener("change", function () {
+                changeColor(this);
+            });
+            batchHouse();
+            setInterval(() => batchHouse(), 30000);
+        });
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -102,8 +111,9 @@
         function openModal(type) {
             switch (type) {
                 case 1:
-
+                    // 호실별 문의 리스트
                     $(".modal.1").addClass('is-active');
+
                     break;
                 case 2:
                     
@@ -117,7 +127,24 @@
                 case 3:
                     $(".modal.3").addClass('is-active');
                     break;
-                default:
+                default: // 모든 호실 미처리 문의 리스트
+                    $(".modal.1").addClass('is-active');
+                    $.ajax({
+                        url: "/noList", // 요청을 보낼 엔드포인트 URL
+                        type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                        headers: {
+                            "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                        },
+                        success: function (response) {
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            // 요청이 실패한 경우 또는 오류가 발생한 경우
+                            alert('인증 토큰 만료 등의 인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                            console.error("요청 실패 또는 오류 발생:", status, error);
+                        }
+                    });
                     break;
                 }
             // 관리자 페이지 인원 리스트
@@ -149,6 +176,8 @@
                 });
             });
         }
+
+
         function changeColor(data) {
             let selectedColor = data.value; // 선택한 색상
             // 아이콘의 색상 변경
@@ -215,6 +244,8 @@
                 });
             });
         });
+
+        
 
 
         // 관리자 페이지 "호실 문의 리스트 확인"
@@ -324,7 +355,7 @@
             </div>
         </div>
     </div>
-    <div class="columns" >
+    <div class="columns">
         <section class="column section is-9" id="moniter"></section>
         <section id="rightSection" class="section column has-background-success">
             <div class="title">
@@ -350,12 +381,13 @@
                     </label>
                 </div>
                 <div class="is-fullwidth" style="bottom: 5px;">
-                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)">호실 문의 리스트 확인</button>
+                    <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)" data-option="1">호실 문의 리스트
+                        확인</button>
                     <button class="is-fullwidth button is-info mb-1" onclick="openModal(2)">체크인원 수정 처리</button>
                     <button class="is-fullwidth button is-danger mb-1">체크인원 퇴사 처리</button>
                 </div>
             </div>
-            <button class="is-fullwidth button is-info mb-1" onclick="openModal(1)">미완료 문의 리스트</button>
+            <button class="is-fullwidth button is-info mb-1" onclick="openModal()" data-option="2">미완료 문의 리스트</button>
             <button class="is-fullwidth button is-info mb-1" type="button"> <a href="./managerUserUpload.html">기숙사 인원
                     리스트 추가(EXCEL)</a></button>
         </section>
