@@ -24,7 +24,7 @@
         * {
             text-align: center;
             box-sizing: border-box;
-            font-family: "Noto Sans KR", sans-serif;
+            font-family: "Noto Sans KR", sans-serif !important;
         }
 
         a {
@@ -48,8 +48,9 @@
             $(".icon").css("color", "#f14668");
             document.getElementById("colorSelect").addEventListener("change", function () {
                 changeColor(this);
-            });
+            });           
             batchHouse();
+            setInterval(() => batchHouse(), 30000);
         });
         function getCookie(name) {
             var cookieValue = null;

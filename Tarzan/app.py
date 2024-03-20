@@ -120,6 +120,7 @@ def loginManager():
 def loginUser():
         return render_template('mainPage.html')
 
+#모니터링 템플렛 호출 페이지
 @app.route('/batchHouse', methods=['POST'])
 @jwt_required()
 def batchHouse():
