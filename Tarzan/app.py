@@ -237,8 +237,6 @@ def makeComment():
 
         time = year + "/" + month + "/" + date # 작성일자
         articleId = ObjectId(request.form['articleId']) # _id값
-        name = request.form['name'] # 이름
-        house = request.form['house'] # 호실
         text = request.form['text'] # 댓글내용
         
         # 댓글 작성
