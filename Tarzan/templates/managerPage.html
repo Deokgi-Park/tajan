@@ -46,14 +46,6 @@
         }
     </style>
     <script>
-        $(document).ready(function () {
-            $(".icon").css("color", "#f14668");
-            document.getElementById("colorSelect").addEventListener("change", function () {
-                changeColor(this);
-            });           
-            batchHouse();
-            setInterval(() => batchHouse(), 30000);
-        });
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -92,24 +84,6 @@
                 }
             });
         }
-        function batchHouse() {
-            $.ajax({
-                url: "/batchHouse",
-                type: "POST",
-                headers: {
-                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
-                },
-                success: function (response) {
-                    $("#moniter").empty();
-                    $("#moniter").prepend(response);
-                },
-                error: function (xhr, status, error) {
-                    // 요청이 실패한 경우 또는 오류가 발생한 경우
-                    alert('세션만료 및 서버 장애입니다. 재로그인 바랍니다.');
-                    window.location.href = '/';
-                }
-            });
-        }
         function closeModal(type) {
             switch (type) {
                 case 1:
@@ -127,11 +101,17 @@
         }
         function openModal(type) {
             switch (type) {
-                case 1: // 호실별 문의 리스트 / 미완료 문의 리스트
+                case 1:
+
                     $(".modal.1").addClass('is-active');
-                    
                     break;
                 case 2:
+                    
+                    $(".icon").css("color", "#f14668");
+                    document.getElementById("colorSelect").addEventListener("change", function () {
+                        changeColor(this);
+                    });
+                    
                     $(".modal.2").addClass('is-active');
                     break;
                 case 3:
@@ -139,8 +119,35 @@
                     break;
                 default:
                     break;
-            }
-
+                }
+            // 관리자 페이지 인원 리스트
+            $("#check").on("click", function () {
+                console.log("hi")
+                let base_data = list($('input[name="select"]:checked').val().split("-"))
+                $('#inputData1').attr('value', base_data[0]);
+                $('#inputData2').attr('value', base_data[1]);
+                $('#inputData3').attr('value', base_data[2]);
+                $.ajax({
+                    type: 'POST',
+                    url: '/modifyUser',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                    },
+                    data: {
+                        grade: base_data[0],
+                        number: base_data[1],
+                        name: base_data[2]
+                    },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('수정이 완료되었습니다.');
+                            window.location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
         }
         function changeColor(data) {
             let selectedColor = data.value; // 선택한 색상
@@ -159,58 +166,59 @@
                     $(".icon").css("color", "#f14668");
             }
         }
-        function select_house(house_id) {
-            let house = $('#house').val()       //id 값에 따라 #house값 변경
-            $.ajax({
-                type: 'POST',
-                url: '/joinHouse',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
-                },
-                data: { house: house_id },
-                success: function (response) {
-                    if (response['status'] == 'success') {
-                        for (let i = 0; i < response.length; i++) {
-                            grade = response[i]['grade']
-                            number = response[i]['number']
-                            name = response[i]['name']
-                            inputHtml = '<h3>' + grade + ' ' + number + ' ' + nmae + '</h3>';
-                            $('#house').append(inputHtml);          // 위와 동일
-                        }
-                    } else {
-                        alert(response.message);
-                    }
-                }
+        $(document).ready(function () {
+            $(".icon").css("color", "#f14668");
+            document.getElementById("colorSelect").addEventListener("change", function () {
+                changeColor(this);
             });
-        }
 
-         // 관리자 페이지 인원 리스트
-         function select_house(house_id){
-            let house = $('#house').val()       //id 값에 따라 #house값 변경
-            $.ajax({
-                type: 'POST',
-                url: '/joinHouse',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
-                },
-                data: {house:house_id},
-                success: function(response) {
-                    if (response['result'] == 'success') {
-                        for(let i =0 ; i<response.length;i++){
-                            grade = response[i]['grade']
-                            number = response[i]['number']
-                            name = response[i]['name']
-                            inputHtml = '<h3>' + grade + ' ' + number + ' ' + name + '</h3>';
-                            $('#house').append(inputHtml);          // 위와 동일
+            // 관리자 페이지 인원 리스트
+            $("article").on("click", function () {
+                let house = $(this).attr('alt');
+                $.ajax({
+                    type: 'POST',
+                    url: '/joinHouse',
+                    headers: {
+                        "Authorization": "Bearer " + getCookie("access_token")
+                    },
+                    data: { house: house },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            let home = response.home;
+                            $('#modalList').empty();
+                            for (let i = 0; i < home.length; i++) {
+                                grade = home[i]['grade']
+                                number = home[i]['number']
+                                name = home[i]['name']
+                                houses = home[i]['house']
+                                inputHtml = `<div class="box has-text-left">
+                                            <label class="radio">
+                                                <input type="radio" name="select" value=${grade}-${number}-${name}>
+                                                <span>${grade}-${number}-${name}</span>
+                                            </label>
+                                        </div>`
+
+                                $('#modalList').prepend(inputHtml);          // 위와 동일
+                            }
+                            inputHtml2 = `
+                            <div class="is-fullwidth" style="bottom: 5px;">
+                            <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)">호실 문의 리스트 확인</button>
+                            <button class="is-fullwidth button is-info mb-1" onclick="openModal(2)">체크인원 수정 처리</button>
+                            <button class="is-fullwidth button is-danger mb-1">체크인원 퇴사 처리</button>
+                            </div>
+                            `
+                            $('#modalList').append(inputHtml2);
+                        } else {
+                            alert(response.message);
                         }
-                    } else {
-                        alert(response.message);
                     }
-                }
+                });
             });
-        }
+        });
+
+
         // 관리자 페이지 "호실 문의 리스트 확인"
-        function help_list(house_id){
+        function help_list(house_id) {
             let house = $('#user_list').val()       //id 값에 따라 #user_list값 변경
             $.ajax({
                 type: 'POST',
@@ -218,17 +226,33 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house:house_id},
-                success: function(response) {
+                data: { house: house_id },
+                success: function (response) {
                     if (response['result'] == 'success') {
-                        for(let i =0 ; i<response.length;i++){
+                        $('#checkList').empty();
+                        for (let i = 0; i < response.length; i++) {
                             house = response[i]['house']
                             state = response[i]['state']
                             title = response[i]['title']
                             date = response[i]['date']
                             name = response[i]['name']
-                            inputHtml = '<h3>' + house + ' ' + state + ' ' + title + ' ' + name  +  ' ' + date +'</h3>';
-                            $('#user_list').append(inputHtml);          // 위와 동일
+                            if (state == 0) {
+                                state_str = '미처리'
+                            }
+                            else if (state == 1) {
+                                state_str = '처리중'
+                            }
+                            else {
+                                state_str = "처리 완료"
+                            }
+                            inputHtml = `<tr>
+                                <td>${house}</td>
+                                <td><span class="tag is-warning">${state_str}</span></td>
+                                <td><a onclick="openModal(3)">${title}</a></td>
+                                <td>${date}</td>
+                                <td>${name}</td>
+                            </tr>`;
+                            $('#checkList').append(inputHtml);          // 위와 동일
                         }
                     } else {
                         alert(response.message);
@@ -238,7 +262,7 @@
         }
 
         // 관리자 페이지 "체크 인원 수정 처리"
-        function modifyInformation(house_id, name_id, grade_id, number_id, new_name_id){
+        function modifyInformation(house_id, name_id, grade_id, number_id, new_name_id) {
             let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
                 type: 'POST',
@@ -246,15 +270,17 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house: house_id,
-                        name: name_id,
-                        grade: grade_id,
-                        number: number_id,
-                        new_name: new_name_id},
-                success: function(response) {
+                data: {
+                    house: house_id,
+                    name: name_id,
+                    grade: grade_id,
+                    number: number_id,
+                    new_name: new_name_id
+                },
+                success: function (response) {
                     if (response['result'] == 'success') {
                         alert('수정이 완료되었습니다.');
-                        window.location.reload();      
+                        window.location.reload();
                     } else {
                         alert(response.message);
                     }
@@ -262,7 +288,7 @@
             });
         }
         // 관리자 페이지 "체크 인원 퇴사 처리"
-        function deleteInformation(house_id, name_id){
+        function deleteInformation(house_id, name_id) {
             let house = $('#user_information').val()       //id 값에 따라 #user_information값 변경
             $.ajax({
                 type: 'POST',
@@ -270,13 +296,14 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house: house_id,
-                        name: name_id,
-                    },
-                success: function(response) {
+                data: {
+                    house: house_id,
+                    name: name_id,
+                },
+                success: function (response) {
                     if (response['result'] == 'success') {
                         alert('퇴사 처리가 완료되었습니다.');
-                        window.location.reload();      
+                        window.location.reload();
                     } else {
                         alert(response.message);
                     }

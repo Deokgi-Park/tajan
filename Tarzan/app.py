@@ -328,23 +328,26 @@ def noList():
             return jsonify({'result':'failure'})
         
 
-# 관리자 페이지 호실 인원 리스트
-@app.route('/joinHouse', methods =['POST'])
+# 관리자 페이지 호실 인원 리스트    // 수정
+@app.route('/joinHouse', methods=['POST'])
 @jwt_required()
-def joinHouse():        # 관리자가 로그인 했을 경우
+def joinHouse():  # 관리자가 로그인 했을 경우
     current_user = get_jwt_identity()
     name = current_user[0]
     house = current_user[1]
-    
     if name == "타잔" and house == "0":
         # 호실 선택 시
         user_house = request.form['house']
+        home = db.user.find({'house': user_house})
 
-        home = db.user.find({'house':user_house})
-
-        return jsonify({'result':'success','home':home})
+        # Cursor 객체를 Dictionary 리스트로 변환하여 반환
+        home_list = []
+        for user in home:
+            home_list.append({'grade': user['grade'], 'number': user['number'], 'name': user['name'],'house':user['house']})
+        print(home_list)
+        return jsonify({'result': 'success', 'home': home_list})
     else:
-        return jsonify({'result':'failure'})
+        return jsonify({'result': 'failure'})
 
 # 관리자 페이지 "호실 문의 리스트 확인"
 @app.route('/checkList', methods =['POST'])
@@ -364,7 +367,7 @@ def checkList():        # 관리자가 로그인 했을 경우
     else:
         return jsonify({'result':'failure'})
     
-# 관리자 페이지 "체크 인원 수정 처리"
+# 관리자 페이지 "체크 인원 수정 처리"       //수정
 @app.route('/modifyUser', methods =['POST'])
 @jwt_required()
 def modifyUser():        # 관리자가 로그인 했을 경우
@@ -374,15 +377,14 @@ def modifyUser():        # 관리자가 로그인 했을 경우
     
     if name == "타잔" and house == "0":
         # 호실 선택 시
-        user_house = request.form['house']
         user_name = request.form['name']
-
         user_grade = request.form['grade']
         user_number = request.form['number']
-        new_user_name = request.form['new_name']
-        home = db.user.find_one({'house':user_house,'name':user_name})
+
+        home = db.user.find_one({'number':user_number,'name':user_name})
+
         if home :    
-            db.user.update_one({'house':user_house,'name':user_name},{"$set": {"grade": user_grade, "number": user_number, "name": new_user_name}})
+            db.user.update_one({{'number':user_number,'name':user_name}},{"$set": {"grade": user_grade, "number": user_number, "name": user_name}})
         return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
