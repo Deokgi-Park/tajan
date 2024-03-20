@@ -8,7 +8,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <!-- Bulma -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     
         <!-- Font awesome -->
         <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
@@ -111,7 +111,8 @@
                 },
                 success: function (response) {
                   if (response['result'] == 'success') {
-                    window.location.href = "http://localhost:33333/boardList" //서버주소로 수정해야 함!!!!!!!!!!!!!!!!!@@@@!!!!!!!
+                    //서버주소로 수정해야 함!!!!!!!!!!!!!!!!!@@@@!!!!!!!
+                    window.location.href = "/boardList" 
                   }
                   else {
                     alert("오류!")
@@ -169,7 +170,7 @@
             </div>
           </div>
           <div class="columns is-mobile loButton mt-1">
-            <button id="loginButton" class="column is-half is-offset-one-quarter button is-success is-size-4" >로그인</button>
+            <button id="loginButton" type="button" onclick="login()" class="column is-half is-offset-one-quarter button is-success is-size-4" >로그인</button>
           </div>
           <div style="text-align: right;"><a style="display: inline-block; color:black; font-weight: bold;" href="/addUser">회원가입</a></div>
         </div>
