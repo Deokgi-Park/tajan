@@ -190,10 +190,6 @@ def searchArticle():
             if i not in articleList:
                 articleList.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
 
-        for i in articleList:
-            print(i)
-
-
         if len(articleList) >= 1:
             return jsonify({'result':'success', 'articleList':articleList})
         else:
