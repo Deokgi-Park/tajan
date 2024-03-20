@@ -7,6 +7,7 @@ from flask_jwt_extended import *
 from werkzeug.security import *
 
 from datetime import datetime
+from jinja2 import Template
 
 
 import json
@@ -53,7 +54,7 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     user_id = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
-    pw = request.form['pw']
+    pw = request.form['password']
 
     # 입력받은 값을 기수, 학번으로 나눈다
     user = user_id.split('-')
@@ -77,39 +78,64 @@ def login():
     else:
         return jsonify({'result':'failure'})
     
-project_list = []
+
+project_list = {}
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
-
+    project_list = {}
     current_user = get_jwt_identity() 
     name =current_user[0]
     house = current_user[1]
+    print(name, house)
 
     title = request.form['title']
     content = request.form['content']
+    print(title, content)
 
     year = datetime.today().year
     month = datetime.today().month
     date = datetime.today().day
-    time = year + "-" + month + "-" + date
+    time = year + "/" + month + "/" + date
 
     db.article.insert_one({'state':"미처리",'title':title,'text':content,'date':time,'house':house,'name':name})
-    same_house = db.article.find({'house':house},{'name':name})
+    house_list = list(db.article.find({'house':house},{'name':name}))
+    print(house_list[0])
 
     if title and content:
-        house_list = list(same_house)
         for i in house_list :           # house_list 값이 비어 있을 경우?
             if i not in project_list:
-                project_list.append({'title': title})
-        return jsonify({'status': 'success'})
+                project_list.append({'title': title,'date':time, 'house':house})
+                print(project_list)
+        return jsonify({'status': 'success', 'project_list':project_list})
     else:
         return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
 
-# @app.route('/add_article_detail', methods=['POST'])
-# @jwt_required()
-# def add_article_detail():
+# 로그인 성공 시 게시글 리스트로 이동
+@app.route('/listAuth', methods = ['POST'])
+@jwt_required()
+def list():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    user = db.user.find_one({'name':name, 'house':house})
+
+    if user:    
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure'})
+
+@app.route('/boardList')
+def good():
+    return render_template('boardList.html', userName='양선규')
+    
+# @app.route('/test')
+# def test(userName):
+#     return render_template('jinjaTest.html')
+
 
 
 

@@ -63,39 +63,52 @@
                 <label for="content">내용:</label>
                 <textarea id="content" name="content" class="form-control" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">제출</button>
+            <button type="submit" class="btn btn-primary" onclick="submit()">제출</button>
         </form>
         <ul id="project-list" class="list-group mt-3">
-            {% for project in project_list %}
-            <li class="list-group-item">
-                <h3>{{ project.title }}</h3>
+            <li id="project-list-article" class="list-group-item">
+                ddf
             </li>
-            {% endfor %}
+            
         </ul>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#project-form').submit(function(event) {
-                event.preventDefault();
-                var formData = $(this).serialize();
-                
+        var xhr = new XMLHttpRequest();
+        $(document).ready(submit)
+
+        function submit() {
+                // $('#project-list').empty()
+                title = $('#title').val
+                content = $('#content').text
+
                 $.ajax({
                     type: 'POST',
                     url: '/add_article',
-                    data: formData,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                    },
+                    data: {title:title,content:content},
                     success: function(response) {
-                        if (response.status == 'success') {
-                            $('#project-list').append('<li class="list-group-item"><h3>' + $('#title').val() + '</h3><p>' + '</p></li>');
-                            $('#title').val('');
+                        if (response['status'] == 'success') {
+                            project_list = response.project_list
+
+                            for(let i=0; i < project_list.length ; i++) {
+                                title = project_list[i]['title']
+                                date = project_list[i]['date']
+                                house = project_list[i]['house']
+
+                                inputHtml = '<h3>' + house + ' ' + title + ' ' + date + '</h3>';
+                                $('#project-list').append(inputHtml); 
+                            }
+
                         } else {
                             alert(response.message);
                         }
                     }
                 });
-            });
-        });
+            }
     </script>
 </body>
 </html>
