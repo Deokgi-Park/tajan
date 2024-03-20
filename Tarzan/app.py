@@ -90,7 +90,7 @@ def login():
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=30))
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=60))
         response = make_response(jsonify({'result': 'success', "grade": grade, "number":number }))
         response.set_cookie('access_token', access_token)
         return response
@@ -190,11 +190,7 @@ def searchArticle():
         for i in article:
             if i not in articleList:
                 articleList.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
-
-        if len(articleList) >= 1:
-            return jsonify({'result':'success', 'articleList':articleList})
-        else:
-            return jsonify({'result':"failure", 'msg':'검색된 문의 없음'})
+        return render_template('mainPageListTmp.html', project_list=articleList)
 
 
 # 문의글 상세 페이지(제목, 내용, 처리상태 조회,수정 / 댓글 작성)
