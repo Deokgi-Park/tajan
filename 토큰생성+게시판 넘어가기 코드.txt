@@ -1,0 +1,55 @@
+# 토큰 생성 함수
+function createCookie(value) {
+    document.cookie = value;
+}
+
+# 로그인 요청 + 토큰 받아오기 코드, 토큰은 Cookie에 저장됨
+$.ajax({
+                    type: "POST",
+                    url: "/login",
+                    data: {'number' : '5-25', 'password' : "wei1os6fd34mq"},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('좋아요 완료!')
+                            if(response['access_token']) {
+                                createCookie(response['access_token'])
+                        } else {
+                            alert('좋아요 실패ㅠㅠ')
+                        }
+                    }
+                    }
+                });
+
+
+#####################################################
+# 로그인 요청 + 토큰 발급 + 게시판 페이지로 넘어가는 코드
+$.ajax({
+    type: "POST",
+    url: "/login",
+    data: { 'number': '5-25', 'password': "wei1os6fd34mq" },
+    success: function (response) {
+        if (response['result'] == 'success') {
+            alert('완료!')
+            if (response['access_token']) {
+                createCookie(response['access_token'])
+                $.ajax({
+                    type: "POST",
+                    url: "/listAuth",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                    },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            window.location.href = "http://localhost:33333/boardList"
+                        }
+                        else {
+                            alert("오류!")
+                        }
+                    }
+                })
+            } else {
+                alert('실패ㅠㅠ')
+            }
+        }
+    }
+});
