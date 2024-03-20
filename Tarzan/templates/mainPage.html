@@ -124,7 +124,7 @@
             });
         }
 
-        // 수정버튼
+        // 수정 기능
         function modifyArticle(articleId) {
             title = $('#titlee').val()
             text = $('#textt').val()
@@ -153,6 +153,89 @@
                 }
             });
         }
+
+
+        // 댓글 작성 기능
+        function makeComment(articleId) {
+
+            // 작성할 댓글 내용 긁어오기
+            commentText = $('#commentArea').val()
+
+            $.ajax({
+                url: "/makeComment",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token")
+                },
+                data: { 'articleId': articleId, 'text': commentText },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("댓글 등록 완료!")
+                        openModal(2, articleId)
+                    }
+                    else {
+                        alert("댓글 등록 실패!")
+                    }
+                }
+            })
+        }
+
+        // 검색 기능 ( 제목 기준 )
+        function searchArticle() {
+            searchText = $('#searchText').val() // 검색어
+
+            $('#lllist').empty()
+            $.ajax({
+                url: "/searchArticle",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token")
+                },
+                data: { 'title': searchText },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        articleList = response['articleList']
+                        for (let i = 0; i < articleList.length; i++) {
+                            title = articleList[i]['title']
+                            date = articleList[i]['date']
+                            house = articleList[i]['house']
+                            state = articleList[i]['state']
+                            name = articleList[i]['name']
+                            articleId = articleList[i]['articleId']
+
+                            if (state == '0') {
+                                state = '미처리'
+                            }
+                            else if (state == '1') {
+                                state = '진행중'
+                            }
+                            else {
+
+                                state = '완료'
+                            }
+
+                            inputHtml = `<tr>
+                                <td>${house}호</td>
+                                <td><span class="tag is-warning">${state}</span></td>
+                                <td><a href="#" onclick="openModal(2,'${articleId}')">${title}</a></td>
+                                <td>${name}</td>
+                                <td>${date}</td>
+                            </tr>`
+
+                            $('#lllist').append(inputHtml);
+                        }
+
+                    } else {
+                        alert(response.message);
+                    }
+                }
+
+            })
+        }
+
+
+
+
     </script>
 </head>
 
@@ -177,10 +260,10 @@
             <h1 class="title">우리 호실 문의 사항</h1>
             <div class="field has-addons">
                 <div class="control is-expanded">
-                    <input class="input" type="text" placeholder="검색어 입력">
+                    <input id="searchText" class="input" type="text" placeholder="검색어 입력">
                 </div>
                 <div class="control">
-                    <a class="button is-success">
+                    <a id="searchGo" class="button is-success" onclick="searchArticle()">
                         검색
                     </a>
                 </div>

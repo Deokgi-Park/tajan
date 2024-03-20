@@ -98,6 +98,7 @@ def login():
         response = make_response(jsonify({'result': 'failed'}))
         return response
 
+
 @app.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
@@ -107,13 +108,16 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
+
 @app.route('/loginManager')
 def loginManager():
         return render_template('managerPage.html', name='test')
 
+
 @app.route('/loginUser')
 def loginUser():
         return render_template('mainPage.html')
+
 
 #모니터링 템플렛 호출 페이지
 @app.route('/batchHouse', methods=['POST'])
@@ -128,6 +132,8 @@ def batchHouse():
     print(houseAddCnt)
     return render_template('managerPageMoniterTmp.html', houseList = houselist, houseAddCnt=houseAddCnt)
 
+
+# 문의글 리스팅 + 등록
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
@@ -159,7 +165,37 @@ def add_article():
     #return jsonify({'status': 'success', 'project_list':project_list})
     # else:
         # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
-    
+
+
+# 검색 기능, 대소문자 구분 안함
+@app.route('/searchArticle', methods = ['POST'])
+@jwt_required()
+def searchArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우 로직 실행
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        title = request.form['title'] # 검색어
+
+        if name != '타잔' and house != '0': # 일반 유저일 경우 자신의 호실만 검색
+            article = db.article.find({'house':house, 'title':{'$regex':title, '$options':'i'}})
+        else: # 관리자일 경우 호실 구분없이 검색
+            article = db.article.find({'title':{'$regex':title, '$options':'i'}})
+
+        articleList = []
+        for i in article:
+            if i not in articleList:
+                articleList.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
+
+        if len(articleList) >= 1:
+            return jsonify({'result':'success', 'articleList':articleList})
+        else:
+            return jsonify({'result':"failure", 'msg':'검색된 문의 없음'})
+
 
 # 문의글 상세 페이지(제목, 내용, 처리상태 조회,수정 / 댓글 작성)
 # 문의글 상세 페이지 조회(글, 댓글리스트)
@@ -227,8 +263,6 @@ def makeComment():
 
         time = year + "/" + month + "/" + date # 작성일자
         articleId = ObjectId(request.form['articleId']) # _id값
-        name = request.form['name'] # 이름
-        house = request.form['house'] # 호실
         text = request.form['text'] # 댓글내용
         
         # 댓글 작성
