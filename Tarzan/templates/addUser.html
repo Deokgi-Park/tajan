@@ -1,121 +1,193 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Tarzan!</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <style>
-        *{
-          text-align: center;
-          color : #48c78e;
-          box-sizing: border-box;
-          font-family: "Noto Sans KR", sans-serif;
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello Tarzan!</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    * {
+      text-align: center;
+      color: #48c78e;
+      box-sizing: border-box;
+      font-family: "Noto Sans KR", sans-serif;
+    }
+
+    html {
+      overflow: auto;
+    }
+
+    .title {
+      font-size: 5rem;
+    }
+
+    input {
+      text-align: left;
+    }
+
+    section.hero.is-medium {
+      position: relative;
+    }
+
+    section.hero.is-medium::before {
+      content: "";
+      background: white;
+      border-radius: 10px;
+      opacity: 0.9;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    .section::before {
+      content: "";
+      background: url(/static/jungle.jpg) no-repeat;
+      background-size: cover;
+      opacity: 0.5;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function () {
+      $("#addin").click(function () {
+        $("#addin").addClass('is-loading');
+        if (document.getElementById("passwordMatchText").textContent === "비밀번호가 일치합니다!") {
+          let formData = $('#info');
+          $.ajax({
+            type: "POST",
+            url: "/regiUser",
+            data: formData.serialize(),
+            success: function (status) {
+              if (status == 'success') {
+                alert("정보가 정상적으로 확인되었습니다. 변경된 비밀번호로 로그인해주세요.");
+                window.location.href = "/";
+              }
+              else {
+                alert("해당 정보을 가진 기숙사생이 없습니다. 담당자에게 문의하세요.");
+                $("#addin").removeClass('is-loading');
+              }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+              alert("서버 요청 실패");
+              $("#addin").removeClass('is-loading');
+            }
+          });
         }
-        html{
-            overflow: auto;
+        else {
+          alert("비밀번호를 재확인 하세요");
+          $("#addin").removeClass('is-loading');
         }
-        .title{
-          font-size: 5rem;
-        }
-        input{
-          text-align:left;
-        }
-        section.hero.is-medium{
-          position: relative;
-        }
-        section.hero.is-medium::before{
-          content:"";
-          background: white;
-          border-radius: 10px;
-          opacity:0.9;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-        .section::before{
-          content:"";
-          background:url(/static/jungle.jpg) no-repeat;
-          background-size:cover;
-          opacity:0.5;
-          position:absolute;
-          top:0px;
-          left:0px;
-          right:0px;
-          bottom:0px;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $( document ).ready(function() {
-            $("#addin").click(function(){
-                $("#addin").addClass('is-loading');
-            })
-            $("#return").click(function(){
-                $("#return").addClass('is-loading');
-            })
-        })
-    </script>
-  </head>
-  <body>
-    <section class="section">
-      <div class="container">      
-        <section class="hero is-medium">
-          <!-- Hero content: will be in the middle -->
-          <div class="hero-body">
-            <div class="container has-text-centered">
-              <p class="subtitle has-text-success is-size-3 mt-1">
-                <strong class="has-text-success is-size-1">Tarzan</strong>
-              </p>
-              <p class="title">
-                회원가입
-              </p>
+
+      });
+
+      $("#return").click(function () {
+        $("#return").addClass('is-loading');
+      });
+      document.getElementById("password").addEventListener("input", checkPasswordMatch);
+      document.getElementById("confirm_password").addEventListener("input", checkPasswordMatch);
+    })
+    function checkPasswordMatch() {
+      let password = document.getElementById("password").value;
+      let confirmPassword = document.getElementById("confirm_password").value;
+
+      // 비밀번호 일치 여부에 따라 메시지를 설정
+      let message = (password === confirmPassword) ? "비밀번호가 일치합니다!" : "비밀번호가 일치하지 않습니다.";
+
+      // 메시지를 화면에 표시
+      document.getElementById("passwordMatchText").textContent = message;
+      if (password === confirmPassword) {
+        $("#confirm_password").removeClass('is-danger');
+        $("#confirm_password").addClass('is-success');
+        $('#passwordMatchText').css("color", "#48c78e");
+      }
+      else {
+        $("#confirm_password").removeClass('is-success');
+        $("#confirm_password").addClass('is-danger');
+        $('#passwordMatchText').css("color", "#f14668");
+      }
+
+    }
+
+
+
+  </script>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+      <section class="hero is-medium">
+        <!-- Hero content: will be in the middle -->
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <p class="subtitle has-text-success is-size-3 mt-1">
+              <strong class="has-text-success is-size-1">Tarzan</strong>
+            </p>
+            <p class="title">
+              회원가입
+            </p>
+          </div>
+        </div>
+      </section>
+      <form id="info" class="columns is-three-fifths is-offset-one-fifth mt-3" method="post" action="/regiUser">
+        <div class="column is-three-fifths is-offset-one-fifth">
+          <div class="columns field is-centered">
+            <label class="column is-2 label is-size-4">기수</label>
+            <div class="column is-5 control">
+              <input class="input is-success" id="grade" name="grade" type="text" placeholder="ex) 5기 -> 5">
             </div>
           </div>
-        </section>      
-        <form class="columns is-three-fifths is-offset-one-fifth mt-3">
-          <div class="column is-three-fifths is-offset-one-fifth">
-            <div class="columns field is-centered">
-              <label class="column is-2 label is-size-4">기수</label>
-              <div class="column is-5 control">
-                <input class="input is-success" type="text" placeholder="ex) 5기 -> 5">
-              </div>
-            </div>
-            <div class="columns field is-centered">
-              <label class="column is-2 label is-size-4">학번</label>
-              <div class="column is-5 control">
-                <input class="input is-success" type="text" placeholder="ex) 고유번호 -> 18">
-              </div>
-            </div>
-            <div class="columns field is-centered">
-              <label class="column label is-2 is-size-4">이름</label>
-              <div class="column is-5 control">
-                <input class="input is-success" type="text" placeholder="이름을 입력하세요">
-              </div>
-            </div>
-            <div class="columns field is-centered">
-              <label class="column is-2 label is-size-4">PW</label>
-              <div class="column is-5 control">
-                <input class="input is-success" type="password" placeholder="사용할 PASSWORD 입력">
-              </div>
-            </div>
-            <div class="columns field is-centered">
-              <label class="column is-2 label is-size-5">재확인</label>
-              <div class="column is-5 control">
-                <input class="input is-success" type="password" placeholder="사용할 PASSWORD 재입력">
-              </div>
-            </div>
-            <div class="columns is-mobile loButton">
-                <button id="addin" class="column is-6 is-offset-3 button is-success is-size-4">회원가입</button>
-            </div>
-            <div class="columns is-mobile mt-1">
-              <a id="return" href="./index.html" class="column is-6 is-offset-3 button is-success is-size-4">돌아가기</a>
+          <div class="columns field is-centered">
+            <label class="column is-2 label is-size-4">학번</label>
+            <div class="column is-5 control">
+              <input class="input is-success" id="number" name="number" type="text" placeholder="ex) 고유번호 -> 18">
             </div>
           </div>
-        </form>
-      </div>
-    </section>
-  </body>
+          <div class="columns field is-centered">
+            <label class="column label is-2 is-size-4">이름</label>
+            <div class="column is-5 control">
+              <input class="input is-success" id="name" name="name" type="text" placeholder="이름을 입력하세요">
+            </div>
+          </div>
+          <div class="columns field is-centered">
+            <label class="column is-2 label is-size-4">PW</label>
+            <div class="column is-5 control">
+              <input id="password" required class="input is-success" name="pw" type="password"
+                placeholder="사용할 PASSWORD 입력">
+            </div>
+          </div>
+          <div class="columns field is-centered">
+            <label class="column is-2 label is-size-5">재확인</label>
+            <div class="column is-5 control">
+              <input id="confirm_password" required class="input is-success" type="password"
+                placeholder="사용할 PASSWORD 재입력">
+            </div>
+          </div>
+
+          <div class="columns help is-success has-text-centered">
+            <p class="column" style="font-weight: bolder; font-size: 1.4em;text-shadow: 2px 0px 5px white;"
+              id="passwordMatchText">비밀번호를 확인해주세요</p>
+          </div>
+
+          <div class="columns is-mobile loButton">
+            <button type="button" id="addin" class="column is-6 is-offset-3 button is-success is-size-4">가입요청</button>
+          </div>
+          <div class="columns is-mobile mt-1">
+            <a id="return" href="/" class="column is-6 is-offset-3 button is-success is-size-4">돌아가기</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</body>
+
 </html>
