@@ -31,9 +31,11 @@
             text-decoration: none;
             color: white;
         }
-        body{
+
+        body {
             padding: 1%;
         }
+
         html {
             overflow: auto;
         }
@@ -93,6 +95,24 @@
                 }
             });
         }
+        function batchHouse() {
+            $.ajax({
+                url: "/batchHouse",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                },
+                success: function (response) {
+                    $("#moniter").empty();
+                    $("#moniter").prepend(response);
+                },
+                error: function (xhr, status, error) {
+                    // 요청이 실패한 경우 또는 오류가 발생한 경우
+                    alert('세션만료 및 서버 장애입니다. 재로그인 바랍니다.');
+                    window.location.href = '/';
+                }
+            });
+        }
         function closeModal(type) {
             switch (type) {
                 case 1:
@@ -110,18 +130,16 @@
         }
         function openModal(type) {
             switch (type) {
-                case 1:
-                    // 호실별 문의 리스트
+                case 1: // 호실별 문의 리스트 / 미완료 문의 리스트
                     $(".modal.1").addClass('is-active');
 
                     break;
                 case 2:
-                    
                     $(".icon").css("color", "#f14668");
                     document.getElementById("colorSelect").addEventListener("change", function () {
                         changeColor(this);
                     });
-                    
+
                     $(".modal.2").addClass('is-active');
                     break;
                 case 3:
@@ -146,7 +164,7 @@
                         }
                     });
                     break;
-                }
+            }
             // 관리자 페이지 인원 리스트
             $("#check").on("click", function () {
                 console.log("hi")
@@ -245,7 +263,7 @@
             });
         });
 
-        
+
 
 
         // 관리자 페이지 "호실 문의 리스트 확인"
