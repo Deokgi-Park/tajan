@@ -166,6 +166,30 @@ def add_article():
     # else:
         # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
 
+@app.route('/mng_article', methods=['POST'])
+@jwt_required()
+def mng_article():
+    project_list = []
+    house = request.form['house']
+    house_list = db.article.find({'house':house})
+
+    # if title and content:
+    for i in house_list :           # house_list 값이 비어 있을 경우?
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
+
+    return render_template('managerPageListTmp.html', project_list=project_list)
+
+@app.route('/no_check_article', methods=['POST'])
+@jwt_required()
+def no_check_article():
+    project_list = []
+    house_list = db.article.find({'state' : '0'})
+
+    # if title and content:
+    for i in house_list :           # house_list 값이 비어 있을 경우?
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
+    print(project_list)
+    return render_template('managerPageNoChkListTmp.html', project_list=project_list)
 
 # 검색 기능, 대소문자 구분 안함
 @app.route('/searchArticle', methods = ['POST'])
@@ -208,11 +232,60 @@ def joinArticle():
         commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
     return render_template('mainPageModalTmp.html', article=article, comment=commentList)
  
+@app.route('/mngJoinArticle', methods = ['POST'])
+@jwt_required()
+def mngJoinArticle():
+    articleId = ObjectId(request.form['articleId']) # _id값 수신
+
+    article = db.article.find_one({'_id':articleId}) # 글 찾기
+    comment = db.comment.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+
+    commentList = []
+    for i in comment:
+        commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
+    return render_template('managerPageModalTmp.html', article=article, comment=commentList)
+ 
+@app.route('/mngNoChkJoinArticle', methods = ['POST'])
+@jwt_required()
+def mngNoChkJoinArticle():
+    articleId = ObjectId(request.form['articleId']) # _id값 수신
+
+    article = db.article.find_one({'_id':articleId}) # 글 찾기
+    comment = db.comment.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+
+    commentList = []
+    for i in comment:
+        commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
+    return render_template('managerPageNoChkModalTmp.html', article=article, comment=commentList)
+ 
 
 # 문의글 수정 기능(제목, 내용, 처리상태)
 @app.route('/modifyArticle', methods = ['POST'])
 @jwt_required()
 def modifyArticle():
+    articleId = ObjectId(request.form['articleId']) # _id값 수신
+    changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
+    changeText = request.form['text']
+    changeState = request.form['state']
+    
+    if changeState == '미처리':
+        changeState = '0'
+    elif changeState == '진행중':
+        changeState = '1'
+    else:
+        changeState = '2'
+
+    result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
+
+    if result.modified_count == 1 :
+        return jsonify({'result' : 'success'})
+    else :
+        return jsonify({'result' : 'failure'})
+    
+# 문의글 수정 기능(제목, 내용, 처리상태)
+@app.route('/noCheckmodifyArticle', methods = ['POST'])
+@jwt_required()
+def noCheckmodifyArticle():
     articleId = ObjectId(request.form['articleId']) # _id값 수신
     changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
     changeText = request.form['text']
@@ -303,10 +376,6 @@ def list():
             return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure'})
-
-@app.route('/boardList')
-def good():
-    return render_template('boardList.html', userName='양선규')
     
 
 # 모든 호실 미처리 문의 리스트
@@ -337,21 +406,16 @@ def noList():
 @jwt_required()
 def joinHouse():  # 관리자가 로그인 했을 경우
     current_user = get_jwt_identity()
-    name = current_user[0]
-    house = current_user[1]
-    if name == "타잔" and house == "0":
-        # 호실 선택 시
-        user_house = request.form['house']
-        home = db.user.find({'house': user_house})
+    # 호실 선택 시
+    user_house = request.form['house']
+    home = db.user.find({'house': user_house})
 
-        # Cursor 객체를 Dictionary 리스트로 변환하여 반환
-        home_list = []
-        for user in home:
-            home_list.append({'grade': user['grade'], 'number': user['number'], 'name': user['name'],'house':user['house']})
-        print(home_list)
-        return jsonify({'result': 'success', 'home': home_list})
-    else:
-        return jsonify({'result': 'failure'})
+    # Cursor 객체를 Dictionary 리스트로 변환하여 반환
+    home_list = []
+    for user in home:
+        home_list.append({'grade': user['grade'], 'number': user['number'], 'name': user['name'],'house':user['house']})
+    print(home_list)
+    return render_template('managerPageUserListTmp.html', people=home_list, room = user_house)
 
 # 관리자 페이지 "호실 문의 리스트 확인"
 @app.route('/checkList', methods =['POST'])
@@ -375,42 +439,30 @@ def checkList():        # 관리자가 로그인 했을 경우
 @app.route('/modifyUser', methods =['POST'])
 @jwt_required()
 def modifyUser():        # 관리자가 로그인 했을 경우
-    current_user = get_jwt_identity()
-    name = current_user[0]
-    house = current_user[1]
-    
-    if name == "타잔" and house == "0":
-        # 호실 선택 시
-        user_name = request.form['name']
-        user_grade = request.form['grade']
-        user_number = request.form['number']
-
-        home = db.user.find_one({'number':user_number,'name':user_name})
-
-        if home :    
-            db.user.update_one({{'number':user_number,'name':user_name}},{"$set": {"grade": user_grade, "number": user_number, "name": user_name}})
-        return jsonify({'result':'success'})
-    else:
-        return jsonify({'result':'failure'})
+    userInfo = request.form['userInfo']  # 기수-학번으로 입력받는다. ex)5-25
+    user = userInfo.split('-')
+    grade = user[0]
+    number = user[1]
+    newGrade = request.form['newGrade']
+    newNumber = request.form['newNumber']
+    newName = request.form['newName']
+    home = db.user.find_one({'grade':grade,'number':number})    
+    if home :    
+        db.user.update_one({'grade':grade,'number':number},{'$set': {'grade':newGrade,'number':newNumber,'name': newName }})
+    return jsonify({'result':'success'})  
 
 # 관리자 페이지 "체크 인원 퇴사 처리"
 @app.route('/deleteUser', methods =['POST'])
 @jwt_required()
 def deleteUser():        # 관리자가 로그인 했을 경우
-    current_user = get_jwt_identity()
-    name = current_user[0]
-    house = current_user[1]
-    
-    if name == "타잔" and house == "0":
-        # 호실 선택 시
-        user_house = request.form['house']
-        user_name = request.form['name']
-        home = db.user.find_one({'house':user_house,'name':user_name})
-        if home :    
-            db.user.delete_one({'name':user_name})
-        return jsonify({'result':'success'})    
-    else:
-        return jsonify({'result':'failure'})
+    userInfo = request.form['userInfo']  # 기수-학번으로 입력받는다. ex)5-25
+    user = userInfo.split('-')
+    grade = user[0]
+    number = user[1]
+    home = db.user.find_one({'grade':grade,'number':number})
+    if home :    
+        db.user.delete_one({'grade':grade,'number':number})
+    return jsonify({'result':'success'})    
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
 # 다른 파일에서 이 코드를 import하여 모듈을 이용할 수 있게 한다

@@ -1,0 +1,20 @@
+<div class="title">
+    <p style="color:white; font-size:0.8em"><span id="houseNumber"style="color:white; font-size:1em">{{ room }}</span>호실 인원 리스트</p>
+</div>
+<div class="box" style="position: relative; height: 30em;">
+    {% for person in people %}
+    <div class="box has-text-left">
+        <label class="radio">
+            <input type="radio" name="select" value="{{ person.grade }}-{{ person.number }}-{{ person.name }}">
+            <span>{{ person.grade }}-{{ person.number }}-{{ person.name }}</span>
+        </label>
+    </div>
+    {% endfor %}
+    <div class="is-fullwidth" style="bottom: 5px;">
+        <button class="is-fullwidth button is-success mb-1" onclick="openModal(1)" data-option="1">호실 문의 리스트 확인</button>
+        <button class="is-fullwidth button is-info mb-1" onclick="openModal(2)">체크인원 수정 처리</button>
+        <button class="is-fullwidth button is-danger mb-1" onclick="deleteUser()">체크인원 퇴사 처리</button>
+    </div>
+</div>
+<button class="is-fullwidth button is-info mb-1" onclick="openModal()" data-option="2">미완료 문의 리스트</button>
+<button class="is-fullwidth button is-info mb-1" type="button"> <a href="./managerUserUpload.html">기숙사 인원 리스트 추가(EXCEL)</a></button>

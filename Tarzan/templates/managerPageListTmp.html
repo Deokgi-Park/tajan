@@ -1,0 +1,25 @@
+{% if project_list %}
+{% for post in project_list %}
+<tr>
+    <td>{{ post.house }}</td>
+    <td><span class="tag {% if post.state == '1' %}is-warning
+        {% elif post.state == '0' %}is-danger
+        {% elif post.state == '2' %}is-success{% endif %}">
+        {% if post.state == '1' %}진행중
+        {% elif post.state == '0' %}미처리
+        {% elif post.state == '2' %}&nbsp;&nbsp;완료&nbsp;&nbsp;{% endif %}
+    </span>
+    </td>
+    <td>
+        <a href="#" onclick="openModal(3, '{{ post.articleId }}')">
+        {{ post.title }}</a>
+    </td>
+    <td>{{ post.name }}</td>
+    <td>{{ post.date }}</td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+    <td rowspan="5">문의 게시글이 없습니다.</td>
+</tr>
+{% endif %}
