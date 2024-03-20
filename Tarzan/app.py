@@ -60,8 +60,8 @@ def addUser():
 # API 시작, 회원가입 체크
 @app.route('/regiUser', methods=['POST'])
 def regiUser():
-    grade = int(request.form['grade'])
-    number = int(request.form['number'])  # 기수-학번으로 입력받는다. ex)5-25
+    grade = request.form['grade']
+    number = request.form['number']  # 기수-학번으로 입력받는다. ex)5-25
     name = request.form['name']
     pw = request.form['pw']
     print(grade,name,number,pw)
@@ -91,8 +91,8 @@ def login():
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=1))
-        response = make_response(jsonify({'result': 'success'}))
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=30))
+        response = make_response(jsonify({'result': 'success', "grade": grade, "number":number }))
         response.set_cookie('access_token', access_token)
         return response
     else:
@@ -110,13 +110,23 @@ def logout():
 
 @app.route('/loginManager')
 def loginManager():
-        return render_template('managerPage.html')
+        return render_template('managerPage.html', name='test')
 
 @app.route('/loginUser')
 def loginUser():
         return render_template('mainPage.html')
 
-
+@app.route('/batchHouse', methods=['POST'])
+@jwt_required()
+def batchHouse():
+    current_user = get_jwt_identity()
+    houselist = db.user.distinct('house')
+    houseAddCnt =[]
+    for house in houselist :
+        CNT = db.article.count_documents({"house": house, "state": "0"})
+        houseAddCnt.append({house : CNT})
+    print(houseAddCnt)
+    return render_template('monitering.html', houseList = houselist, houseAddCnt=houseAddCnt)
 
 @app.route('/add_article', methods=['POST'])
 @jwt_required()

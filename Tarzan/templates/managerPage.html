@@ -39,8 +39,18 @@
         #rightSection {
             border-radius: 10px 10px;
         }
+        article{
+            cursor: pointer;
+        }
     </style>
     <script>
+        $(document).ready(function () {
+            $(".icon").css("color", "#f14668");
+            document.getElementById("colorSelect").addEventListener("change", function () {
+                changeColor(this);
+            });
+            batchHouse();
+        });
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -75,6 +85,24 @@
                     // 요청이 실패한 경우 또는 오류가 발생한 경우
                     alert('인증 토큰 분실 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
                     console.error("요청 실패 또는 오류 발생:", status, error);
+                    window.location.href = '/';
+                }
+            });
+        }
+        function batchHouse() {
+            $.ajax({
+                url: "/batchHouse",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token") // JWT 토큰을 Authorization 헤더에 포함
+                },
+                success: function (response) {
+                    $("#moniter").empty();
+                    $("#moniter").prepend(response);
+                },
+                error: function (xhr, status, error) {
+                    // 요청이 실패한 경우 또는 오류가 발생한 경우
+                    alert('세션만료 및 서버 장애입니다. 재로그인 바랍니다.');
                     window.location.href = '/';
                 }
             });
@@ -127,14 +155,7 @@
                     $(".icon").css("color", "#f14668");
             }
         }
-        $(document).ready(function () {
-            $(".icon").css("color", "#f14668");
-            document.getElementById("colorSelect").addEventListener("change", function () {
-                changeColor(this);
-            });
-        });
-
-        function select_house(house_id){
+        function select_house(house_id) {
             let house = $('#house').val()       //id 값에 따라 #house값 변경
             $.ajax({
                 type: 'POST',
@@ -142,10 +163,10 @@
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
                 },
-                data: {house:house_id},
-                success: function(response) {
+                data: { house: house_id },
+                success: function (response) {
                     if (response['status'] == 'success') {
-                        for(let i =0 ; i<response.length;i++){
+                        for (let i = 0; i < response.length; i++) {
                             grade = response[i]['grade']
                             number = response[i]['number']
                             name = response[i]['name']
@@ -163,484 +184,17 @@
 
 <body>
     <div class="title columns">
-        <p class="column mt-4 has-text-success">기숙사 호실 문의 관리 시스템</p>
-        <div class="column is-1 mt-3">
-            <button class="button is-danger" onclick="logout()">로그아웃</button>
+        <p class="column mt-4 has-text-success">
+            기숙사 호실 문의 관리 시스템</p>
+        <div class="column is-2 mt-3">
+            <div class="columns">
+                <button class="column button is-info" onclick="batchHouse()">페이지 새로고침</button>
+                <button class="column button is-danger" onclick="logout()">로그아웃</button>
+            </div>
         </div>
     </div>
-    <div class="columns">
-        <section class="column section is-9">
-            <div class="columns">
-                <article class="column has-background-danger-dark m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101" data-form="101">101</p>
-                </article>
-                <article class="column has-background-success m-1 box" alt="102">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="102" data-form="102">102</p>
-                </article>
-                <article class="column has-background-success m-1 box" alt="103">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="103" data-form="103">103</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-            <div class="columns">
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-                <article class="column has-background-grey-darker m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101">공실</p>
-                </article>
-            </div>
-        </section>
+    <div class="columns" >
+        <section class="column section is-9" id="moniter"></section>
         <section id="rightSection" class="section column has-background-success">
             <div class="title">
                 <p style="color:white; font-size:0.8em"><span style="color:white; font-size:1em">104</span>호실 인원 리스트</p>

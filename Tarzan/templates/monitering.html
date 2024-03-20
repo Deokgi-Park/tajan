@@ -1,0 +1,32 @@
+<div class="columns">
+    {% set num_iterations = 166-houseList|length %}
+    {% set num_other = houseList|length %}
+    {% for value in houseList %}
+    {% if value != "0" %}
+    {% if (loop.index-1)%15 == 0 %}
+</div>
+<div class="columns">
+    {% endif %}
+    {% if houseAddCnt[loop.index-1][value] == 0 %}
+    <article class="column has-background-success m-1 box" alt="{{value}}">
+        <p style="padding : 10px 0 10px 0" class="has-text-white" title="{{value}}" data-form="{{value}}">
+            {% endif %}
+            {% if houseAddCnt[loop.index-1][value] != 0 %}
+        <article class="column has-background-danger-dark m-1 box" alt="{{value}}">
+            <p style="padding : 10px 0 10px 0" class="has-text-white" title="{{value}}" data-form="{{value}}">
+                {% endif %}
+                {{value}}</p>
+        </article>
+        {% endif %}
+        {% endfor %}
+
+        {% for value in range(num_iterations) %}
+        {% if (loop.index+num_other-2)%15 == 0 %}
+</div>
+<div class="columns">
+    {% endif %}
+    <article class="column has-background-grey-darker m-1 box" alt="공실">
+        <p style="padding : 10px 0 10px 0" class="has-text-white" title="공실">공실</p>
+    </article>
+    {% endfor %}
+</div>
