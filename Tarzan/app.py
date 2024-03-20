@@ -105,6 +105,7 @@ def login():
         return jsonify({'result':'failure'})
     
 
+# 메인 페이지 로드 시 실행
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
 def add_article():
@@ -130,12 +131,91 @@ def add_article():
 
     # if title and content:
     for i in house_list :           # house_list 값이 비어 있을 경우?
-        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house']})
+        project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id']})
 
     return jsonify({'status': 'success', 'project_list':project_list})
     # else:
         # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
+
+# 문의글 상세 페이지(제목, 내용, 처리상태 조회,수정 / 댓글 작성)
+# 문의글 상세 페이지 조회(글, 댓글리스트)
+@app.route('/joinArticle', methods = ['POST'])
+@jwt_required()
+def joinArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우 로직 실행
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        articleId = ObjectId(request.form['articleId']) # _id값 수신
+
+        article = db.article.find_one({'_id':articleId}) # 글 찾기
+        comment = db.article.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
+
+        return jsonify({'result':'success', 'article':article, 'comment':comment})
+    else:
+        return jsonify({'result':'failure'})
+    
+
+# 문의글 수정 기능(제목, 내용, 처리상태)
+@app.route('/modifyArticle', methods = ['POST'])
+@jwt_required()
+def modifyArticle():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        articleId = ObjectId(request.form['articleId']) # _id값 수신
+        changeTitle = request.form['title'] # 제목, 내용, 처리상태 수신
+        changeText = request.form['text']
+        changeState = request.form['state']
+
+        result = db.article.update_one({'_id':articleId}, {'$set':{'title':changeTitle, 'text':changeText, 'state':changeState}})
+
+        if result.modified_count == 1 :
+            return jsonify({'result' : 'success'})
+        else :
+            return jsonify({'result' : 'failure'})
+
+
+# 댓글 작성 기능
+@app.route('/makeComment', methods = ['POST'])
+@jwt_required()
+def makeComment():
+    current_user = get_jwt_identity()
+
+    name = current_user[0]
+    house = current_user[1]
+
+    # 토큰에 해당하는 유저가 존재할 경우
+    user = db.user.find_one({'name':name, 'house':house})
+    if user:
+        year = str(datetime.today().year)
+        month = str(datetime.today().month)
+        date = str(datetime.today().day)
+
+        time = year + "/" + month + "/" + date # 작성일자
+        articleId = ObjectId(request.form['articleId']) # _id값
+        name = request.form['name'] # 이름
+        house = request.form['house'] # 호실
+        text = request.form['text'] # 댓글내용
+        
+        # 댓글 작성
+        result = db.comment.insert_one({'article_id':articleId, 'name':name, 'house':house, 'text':text, 'date':time})
+
+        if result.acknowledged == 1:
+            return jsonify({'result':'success'})
+        else:
+            return jsonify({'result':'failure'})
+
 
 # 로그인 성공 시 게시글 리스트로 이동
 @app.route('/listAuth', methods = ['POST'])
@@ -157,12 +237,24 @@ def list():
 def good():
     return render_template('boardList.html', userName='양선규')
     
-# @app.route('/test')
-# def test(userName):
-#     return render_template('jinjaTest.html')
 
+# 모든 호실 미처리 문의 리스트
+@app.route('/noList', methods = ['POST'])
+@jwt_required()
+def noList():
+    current_user = get_jwt_identity()
 
+    name = current_user[0]
+    house = current_user[1]
 
+    # 관리자일 경우 로직 실행
+    if name == '타잔' and house == '0':
+        noList = db.article.find({'state':'0'}) # 미처리 문의 전부 가져오기
+        
+        if noList: # 미처리 문의가 1개 이상 존재할 경우
+            return jsonify({'result':'success', 'noList':noList})
+        else:
+            return jsonify({'result':'failure'})
 
 
 # 직접 실행될 때만(이 코드가 import당하는게 아닐 때) 서버를 가동한다
