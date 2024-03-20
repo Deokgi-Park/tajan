@@ -39,12 +39,12 @@
 
     <script>
         var xhr = new XMLHttpRequest();
-        $(document).ready(submit)
+        $(document).ready(submit2)
 
-        function submit() {
-                // $('#project-list').empty()
-                title = $('#title').val()
-                content = $('#content').text()
+        function submit2() {
+                $('#project-list').empty()
+                let title = $('#title').val()
+                let content = $('#content').val()
 
                 $.ajax({
                     type: 'POST',
@@ -91,7 +91,8 @@
                 <label for="content">내용:</label>
                 <textarea id="content" name="content" class="form-control" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" onclick="submit()">제출</button>
+            <button type="button" class="btn btn-primary" onclick="submit2()">제출</button>
+            <button type="button" class="btn btn-primary">미동작제출</button>
         </form>
         <ul id="project-list" class="list-group mt-3">
             <li id="project-list-article" class="list-group-item">
