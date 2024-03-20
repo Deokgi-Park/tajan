@@ -126,7 +126,7 @@ def batchHouse():
         CNT = db.article.count_documents({"house": house, "state": "0"})
         houseAddCnt.append({house : CNT})
     print(houseAddCnt)
-    return render_template('monitering.html', houseList = houselist, houseAddCnt=houseAddCnt)
+    return render_template('managerPageMoniterTmp.html', houseList = houselist, houseAddCnt=houseAddCnt)
 
 @app.route('/add_article', methods=['POST'])
 @jwt_required()
@@ -155,7 +155,8 @@ def add_article():
     for i in house_list :           # house_list 값이 비어 있을 경우?
         project_list.append({'title': i['title'],'date':i['date'], 'house':i['house'], 'articleId':i['_id'], 'name':i['name'], 'state':i['state']})
 
-    return jsonify({'status': 'success', 'project_list':project_list})
+    return render_template('mainPageListTmp.html', project_list=project_list)
+    #return jsonify({'status': 'success', 'project_list':project_list})
     # else:
         # return jsonify({'status': 'error', 'message': '제목과 내용을 입력하세요.'})
     
@@ -165,27 +166,16 @@ def add_article():
 @app.route('/joinArticle', methods = ['POST'])
 @jwt_required()
 def joinArticle():
-    current_user = get_jwt_identity()
+    articleId = ObjectId(request.form['articleId']) # _id값 수신
 
-    name = current_user[0]
-    house = current_user[1]
+    article = db.article.find_one({'_id':articleId}) # 글 찾기
+    comment = db.comment.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
 
-    # 토큰에 해당하는 유저가 존재할 경우 로직 실행
-    user = db.user.find_one({'name':name, 'house':house})
-    if user:
-        articleId = ObjectId(request.form['articleId']) # _id값 수신
-
-        article = db.article.find_one({'_id':articleId}) # 글 찾기
-        comment = db.comment.find({'article_id':articleId}) # 댓글 찾기(커서 객체)
-
-        commentList = []
-        for i in comment:
-            commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
-
-        return jsonify({'result':'success', 'article':article, 'comment':commentList})
-    else:
-        return jsonify({'result':'failure'})
-    
+    commentList = []
+    for i in comment:
+        commentList.append({'name':i['name'], 'text':i['text'], 'date':i['date']})
+    return render_template('mainPageModalTmp.html', article=article, comment=commentList)
+ 
 
 # 문의글 수정 기능(제목, 내용, 처리상태)
 @app.route('/modifyArticle', methods = ['POST'])

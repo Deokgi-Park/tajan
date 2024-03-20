@@ -29,7 +29,9 @@
         }
     </style>
     <script>
-        $(document).ready(submit2)
+        $(document).ready(function () {
+            boardList();
+        })
 
         function closeModal() {
             $(".modal").removeClass('is-active');
@@ -40,12 +42,6 @@
                     $(".modal.1").addClass('is-active');
                     break;
                 case 2:
-                    $(".modal.2").addClass('is-active');
-
-
-
-                    // 문의 글 상세 페이지(제목, 내용, 댓글)
-                    $('#cobox').empty()
                     $.ajax({
                         url: "/joinArticle", // 요청을 보낼 엔드포인트 URL
                         type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
@@ -54,43 +50,13 @@
                         },
                         data: { 'articleId': articleId },
                         success: function (response) {
-                            if (response['result'] == 'success') {
-                                $('#updateDetail').attr('onclick', "modifyArticle('" + articleId + "')")
-
-                                // 제목, 내용 출력
-                                title = response['article']['title']
-                                text = response['article']['text']
-                                $('#titlee').val(title)
-                                $('#textt').val(text)
-
-                                // 댓글 출력
-                                for (let i = 0; i < response['comment'].length; i++) {
-
-                                    name = response['comment'][i]['name']
-                                    co_text = response['comment'][i]['text']
-                                    date = response['comment'][i]['date']
-
-                                    inputHtml = `
-                                    <article class="media">
-                                        <div class="media-content">
-                                            <div class="content">
-                                                <p>
-                                                    <strong>${name}</strong>
-                                                    <br>
-                                                        ${co_text}
-                                                    <br>
-                                                    <small>작성일: ${date}</small>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </article>`
-
-                                    $('#cobox').append(inputHtml)
-                                }
-
-                            }
-
+                            $(".modal.2").empty();
+                            $(".modal.2").prepend(response);
+                            $(".modal.2").addClass('is-active');
                         },
+                        error: function (error) {
+                            alert('서버오류가 발생했습니다. 재로그인 후 시도 바랍니다.')
+                        }
                     })
                     break;
                 default:
@@ -135,33 +101,8 @@
                 }
             });
         }
-        $(document).ready(function () {
-            $(".icon").css("color", "#f14668");
-            document.getElementById("colorSelect").addEventListener("change", function () {
-                var selectedColor = this.value; // 선택한 색상
-
-                var icon = document.getElementsByClassName("icon");
-
-                // 아이콘의 색상 변경
-                switch (selectedColor) {
-                    case "미처리":
-                        $(".icon").css("color", "#f14668");
-                        break;
-                    case "진행중":
-                        $(".icon").css("color", "#ffdd57");
-                        break;
-                    case "완료":
-                        $(".icon").css("color", "#48c774");
-                        break;
-                    default:
-                        $(".icon").css("color", "#f14668");
-                }
-            });
-        })
-
-
-        function submit2() {
-            $('#lllist').empty()
+        function boardList() {
+            $('#lllist').empty();
             let title = $('#ttitle').val()
             let content = $('#ttext').val()
 
@@ -171,43 +112,9 @@
                 headers: { "Authorization": "Bearer " + getCookie("access_token") },
                 data: { title: title, content: content },
                 success: function (response) {
-                    if (response['status'] == 'success') {
-                        project_list = response.project_list
-
-                        for (let i = 0; i < project_list.length; i++) {
-                            title = project_list[i]['title']
-                            date = project_list[i]['date']
-                            house = project_list[i]['house']
-                            state = project_list[i]['state']
-                            name = project_list[i]['name']
-                            articleId = project_list[i]['articleId']
-
-                            if (state == '0') {
-                                state = '미처리'
-                            }
-                            else if (state == '1') {
-                                state = '진행중'
-                            }
-                            else {
-
-                                state = '완료'
-                            }
-
-                            // inputHtml = '<h3>' + house + ' ' + title + ' ' + date + '</h3>';
-                            inputHtml = `<tr>
-                                <td>${house}호</td>
-                                <td><span class="tag is-warning">${state}</span></td>
-                                <td><a href="#" onclick="openModal(2,'${articleId}')">${title}</a></td>
-                                <td>${name}</td>
-                                <td>${date}</td>
-                            </tr>`
-
-                            $('#lllist').append(inputHtml);
-                        }
-
-                    } else {
-                        alert(response.message);
-                    }
+                    $("#lllist").empty();
+                    $("#lllist").prepend(response);
+                    $('.modal').removeClass('is-active')
                 }
                 , error: function (xhr, status, error) {
                     // 요청이 실패한 경우 또는 오류가 발생한 경우
@@ -233,7 +140,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert("수정 완료!")
-                        submit2()
+                        boardList()
                     }
                     else {
                         alert("수정 실패!")
@@ -246,12 +153,6 @@
                 }
             });
         }
-
-
-
-
-
-
     </script>
 </head>
 
@@ -299,28 +200,6 @@
                     </tr>
                 </thead>
                 <tbody id="lllist">
-                    <tr>
-                        <td>1</td>
-                        <td><span class="tag is-warning">진행중</span></td>
-                        <td><a href="#" onclick="openModal(2)">첫 번째 게시물</a></td>
-                        <td>John Doe</td>
-                        <td>2024-01-01</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><span class="tag is-danger">미완료</span></td>
-                        <td><a href="#">두 번째 게시물</a></td>
-                        <td>Jane Smith</td>
-                        <td>2024-01-02</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><span class="tag is-success">&nbsp;&nbsp;완료&nbsp;&nbsp;</span></td>
-                        <td><a href="#">두 번째 게시물</a></td>
-                        <td>Jane Smith</td>
-                        <td>2024-01-02</td>
-                    </tr>
-                    <!-- 추가적인 게시물들을 이곳에 추가할 수 있습니다 -->
                 </tbody>
             </table>
         </div>
@@ -340,99 +219,13 @@
                         placeholder="본문 내용을 입력해주세요"></textarea>
                 </div>
                 <button class="is-fullwidth button is-info mb-1" style="border-radius: 0;"
-                    onclick="submit2()">등록</button>
+                    onclick="boardList()">등록</button>
                 <button class="is-fullwidth button is-danger" style="border-radius: 0;"
                     onclick="closeModal()">취소</button>
             </article>
         </div>
     </div>
     <div class="modal 2">
-        <div class="modal-background"></div>
-        <div class="modal-content columns" style="width: 80%;">
-            <article class="message is-success column" style="padding:0">
-                <div class="message-header">
-                    <p style="color: white;">문의 글 확인 및 수정</p>
-                    <div class="control has-icons-left">
-                        <div class="select">
-                            <select id="colorSelect">
-                                <option>미처리</option>
-                                <option>진행중</option>
-                                <option>완료</option>
-                            </select>
-                        </div>
-                        <span class="icon is-medium is-left">
-                            <i class="fa-solid fa-tag"></i>
-                        </span>
-                    </div>
-                </div>
-                <div class="message-header" style="border-radius: 0;">
-                    <input id="titlee" class="input mb-2" type="text" placeholder="제목">
-                </div>
-                <div style="padding: 0 15px 15px; background-color: #48c774;">
-                    <textarea id="textt" style="min-height: 20em;" class="textarea is-success"
-                        placeholder="본문 내용을 입력해주세요"></textarea>
-                </div>
-                <button id="updateDetail" class="is-fullwidth button is-info mb-1" style="border-radius: 0;"
-                    onclick="modifyArticle()">수정</button>
-                <button class="is-fullwidth button is-danger" style="border-radius: 0;"
-                    onclick="closeModal()">취소</button>
-            </article>
-            <section class="section column">
-                <div class="container">
-                    <div id="cobox" class="box" style="overflow: auto; max-height: 300px;">
-                        <article class="media">
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>사용자 이름</strong>
-                                        <br>
-                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
-                                        iaculis mauris.
-                                        <br>
-                                        <small>작성일: 2024-03-19</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="media">
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>사용자 이름</strong>
-                                        <br>
-                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
-                                        iaculis mauris.
-                                        <br>
-                                        <small>작성일: 2024-03-19</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="media">
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <strong>사용자 이름</strong>
-                                        <br>
-                                        댓글 내용 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
-                                        iaculis mauris.
-                                        <br>
-                                        <small>작성일: 2024-03-19</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <div>
-                    <textarea style="min-height: 4em; border: 0; margin-top: 1em;" class="textarea is-success"
-                        placeholder="댓글 내용을 입력해주세요"></textarea>
-                    <button class="is-fullwidth button is-info mb-1">댓글 등록</button>
-                </div>
-            </section>
-        </div>
-
-    </div>
     </div>
 </body>
 
