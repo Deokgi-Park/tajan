@@ -274,6 +274,8 @@ def noList():
             return jsonify({'result':'success', 'noList':noList})
         else:
             return jsonify({'result':'failure'})
+        
+        
 # 관리자 페이지 호실 인원 리스트
 @app.route('/joinHouse', methods =['POST'])
 @jwt_required()
