@@ -41,6 +41,26 @@
         }
     </style>
     <script>
+        function logout() {
+            $.ajax({
+                url: "/logout", // 요청을 보낼 엔드포인트 URL
+                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                headers: {
+                    "Authorization": "Bearer " + document.cookie // JWT 토큰을 Authorization 헤더에 포함
+                },
+                success: function (response) {
+                    debugger
+                    alert(response.message);
+                    window.location.href = '/';
+                    document.cookie = 'removed';
+                },
+                error: function (xhr, status, error) {
+                    // 요청이 실패한 경우 또는 오류가 발생한 경우
+                    alert('인증 토큰 분실 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                    console.error("요청 실패 또는 오류 발생:", status, error);
+                }
+            });
+        }
         function closeModal(type) {
             switch (type) {
                 case 1:
@@ -102,17 +122,17 @@
     <div class="title columns">
         <p class="column mt-4 has-text-success">기숙사 호실 문의 관리 시스템</p>
         <div class="column is-1 mt-3">
-            <button class="button is-danger">로그아웃</button>
+            <button class="button is-danger" onclick="logout()">로그아웃</button>
         </div>
     </div>
     <div class="columns">
         <section class="column section is-9">
             <div class="columns">
                 <article class="column has-background-danger-dark m-1 box" alt="101">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101" data-form="101" >101</p>
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="101" data-form="101">101</p>
                 </article>
                 <article class="column has-background-success m-1 box" alt="102">
-                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="102" data-form="102" >102</p>
+                    <p style="padding : 10px 0 10px 0" class="has-text-white" title="102" data-form="102">102</p>
                 </article>
                 <article class="column has-background-success m-1 box" alt="103">
                     <p style="padding : 10px 0 10px 0" class="has-text-white" title="103" data-form="103">103</p>

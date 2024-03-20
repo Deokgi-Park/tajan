@@ -103,6 +103,15 @@ def login():
     else:
         return jsonify({'result':'failure'})
 
+@app.route('/logout', methods=['POST'])
+@jwt_required()
+def logout():
+    current_user = get_jwt_identity()
+    name =current_user[0]
+    response = jsonify({'message': name + '님 로그아웃 되었습니다.'})
+    unset_jwt_cookies(response)
+    return response
+
 
 @app.route('/loginManager')
 def loginManager():

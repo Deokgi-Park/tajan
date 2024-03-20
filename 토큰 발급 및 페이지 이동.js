@@ -38,3 +38,24 @@ $.ajax({
         console.error("요청 실패 또는 오류 발생:", status, error);
     }
 });
+
+
+// 토큰으로 로그인 수행
+$.ajax({
+    url: "/logout", // 요청을 보낼 엔드포인트 URL
+    type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+    headers: {
+        "Authorization": "Bearer " + document.cookie // JWT 토큰을 Authorization 헤더에 포함
+    },
+    success: function(response) {
+        debugger
+        alert(response.message);
+        window.location.href = '/';
+        document.cookie = 'removed';
+    },
+    error: function(xhr, status, error) {
+        // 요청이 실패한 경우 또는 오류가 발생한 경우
+        alert('인증 토큰 분실 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+        console.error("요청 실패 또는 오류 발생:", status, error);
+    }
+});

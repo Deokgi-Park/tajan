@@ -108,32 +108,43 @@
         data: formData.serialize(),
         success: function (response) {
           if (response['result'] == 'success') {
-            alert('완료!')
             if (response['access_token']) {
               createCookie(response['access_token'])
               $.ajax({
-                type: "POST",
-                url: "/listAuth",
-                beforeSend: function (xhr) {
-                  xhr.setRequestHeader("Authorization", "Bearer " + document.cookie);
+                url: "/listAuth", // 요청을 보낼 엔드포인트 URL
+                type: "POST", // 요청 메서드 (GET, POST, PUT, DELETE 등)
+                headers: {
+                  "Authorization": "Bearer " + document.cookie // JWT 토큰을 Authorization 헤더에 포함
                 },
                 success: function (response) {
-                  if (response['result'] == 'success') {
-                    //서버주소로 수정해야 함!!!!!!!!!!!!!!!!!@@@@!!!!!!!
-                    window.location.href = "/boardList"
-                  }
-                  else {
-                    alert("오류!")
-                  }
+                  debugger;
+                  // 요청이 성공인 경우 이동
+                  if (response.result == 'admin')
+                    window.location.href = '/loginManager';
+                  else if (response.result == 'success')
+                    window.location.href = '/loginUser';
+                  else
+                    alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.')
+                },
+                error: function (xhr, status, error) {
+                  // 요청이 실패한 경우 또는 오류가 발생한 경우
+                  alert('인증 오류 및 서버 장애가 확인 됩니다. 관리자에게 문의하세요')
+                  console.error("요청 실패 또는 오류 발생:", status, error);
                 }
-              })
+              });
             } else {
-              alert('실패ㅠㅠ')
+              alert('서버 연결에 성공했으나 인증 토큰에 문제가 발생했습니다.');
             }
           }
+          else{
+            alert('로그인에 실패했습니다. 입력정보를 확인하세요.');
+          }
+          $("#loginButton").removeClass('is-loading');
+        },
+        error:function(error){
+          alert("토큰발급 실패 : " + error)
         }
       });
-
     }
   </script>
 </head>
