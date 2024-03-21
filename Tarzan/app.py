@@ -91,7 +91,7 @@ def login():
     # 일치하는 회원이 있을 때 로그인, 성공하면 토큰 발행
     if user:
         userData = [user['name'], user['house']]
-        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=60))
+        access_token = create_access_token(identity=userData, expires_delta=timedelta(minutes=120))
         response = make_response(jsonify({'result': 'success', "grade": grade, "number":number }))
         response.set_cookie('access_token', access_token)
         return response
