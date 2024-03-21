@@ -155,7 +155,7 @@ def add_article():
     if not writeGo and title != '' and content != '': 
         db.article.insert_one({'state':'0','title':title,'text':content,'date':time,'house':house,'name':name})
 
-    house_list = db.article.find({'house':house,'name':name})
+    house_list = db.article.find({'house':house})
 
     # if title and content:
     for i in house_list :           # house_list 값이 비어 있을 경우?
